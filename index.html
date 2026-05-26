@@ -77,11 +77,8 @@
 
         .bg-scanlines {
             background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.04) 2px,
-                rgba(0, 0, 0, 0.04) 4px
+                0deg, transparent, transparent 2px,
+                rgba(0, 0, 0, 0.04) 2px, rgba(0, 0, 0, 0.04) 4px
             );
             z-index: 9999;
         }
@@ -89,8 +86,7 @@
         .bg-glow {
             background: radial-gradient(
                 ellipse 70% 50% at 50% 0%,
-                rgba(var(--accent-rgb), 0.06) 0%,
-                transparent 70%
+                rgba(var(--accent-rgb), 0.06) 0%, transparent 70%
             );
         }
 
@@ -114,9 +110,7 @@
             font-weight: 700;
             letter-spacing: 0.15em;
             color: var(--accent);
-            text-shadow:
-                0 0 30px rgba(var(--accent-rgb), 0.3),
-                0 0 60px rgba(var(--accent-rgb), 0.1);
+            text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.3), 0 0 60px rgba(var(--accent-rgb), 0.1);
             margin-bottom: 0.5rem;
         }
 
@@ -159,7 +153,6 @@
         }
 
         .panel:hover { border-color: var(--border-hover); }
-
         .panel:nth-child(1) { animation-delay: 0.1s; }
         .panel:nth-child(2) { animation-delay: 0.25s; }
 
@@ -207,8 +200,7 @@
             justify-content: center;
         }
 
-        .drop-zone:hover,
-        .drop-zone.drag-over {
+        .drop-zone:hover, .drop-zone.drag-over {
             border-color: var(--accent);
             background: rgba(var(--accent-rgb), 0.04);
             box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.08), inset 0 0 30px rgba(var(--accent-rgb), 0.02);
@@ -243,17 +235,8 @@
             transform: translateY(-2px);
         }
 
-        .drop-default .drop-title {
-            font-size: 0.85rem;
-            color: var(--text-sec);
-            font-weight: 500;
-        }
-
-        .drop-default .drop-hint {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
+        .drop-default .drop-title { font-size: 0.85rem; color: var(--text-sec); font-weight: 500; }
+        .drop-default .drop-hint { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
 
         .drop-preview {
             display: none;
@@ -274,11 +257,7 @@
             flex-shrink: 0;
         }
 
-        .drop-preview-info {
-            flex: 1;
-            text-align: left;
-            min-width: 0;
-        }
+        .drop-preview-info { flex: 1; text-align: left; min-width: 0; }
 
         .drop-preview-info .file-name {
             font-family: var(--font-mono);
@@ -327,9 +306,7 @@
             background: rgba(var(--danger-rgb), 0.1);
         }
 
-        .form-group {
-            margin-top: 1.25rem;
-        }
+        .form-group { margin-top: 1.25rem; }
 
         .form-group label {
             display: block;
@@ -376,7 +353,6 @@
 
         .byte-count { color: var(--text-muted); }
         .byte-count.over { color: var(--danger); }
-
         .capacity-label { color: var(--text-muted); }
         .capacity-label.ok { color: var(--accent); }
         .capacity-label.warn { color: var(--warning); }
@@ -432,10 +408,7 @@
             box-shadow: none !important;
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: #050508;
-        }
+        .btn-primary { background: var(--accent); color: #050508; }
 
         .btn-primary:not(:disabled):hover {
             box-shadow: 0 0 25px rgba(var(--accent-rgb), 0.4), 0 4px 20px rgba(var(--accent-rgb), 0.2);
@@ -465,10 +438,7 @@
             font-size: 0.72rem;
         }
 
-        .btn-copy:not(:disabled):hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .btn-copy:not(:disabled):hover { border-color: var(--accent); color: var(--accent); }
 
         .spinner {
             display: inline-block;
@@ -516,11 +486,7 @@
             text-align: right;
         }
 
-        .result-area {
-            margin-top: 1.25rem;
-            display: none;
-        }
-
+        .result-area { margin-top: 1.25rem; display: none; }
         .result-area.visible { display: block; }
 
         .result-box {
@@ -551,9 +517,7 @@
             margin-left: 2px;
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         .result-label {
             font-family: var(--font-mono);
@@ -563,11 +527,7 @@
             letter-spacing: 0.04em;
         }
 
-        .result-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
+        .result-actions { display: flex; gap: 0.5rem; }
         .result-actions .btn-copy { flex: 1; margin-top: 0.75rem; }
 
         #toast-container {
@@ -593,30 +553,15 @@
             transform: translateX(120%);
             transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
             pointer-events: auto;
-            max-width: 340px;
+            max-width: 380px;
         }
 
         .toast.show { transform: translateX(0); }
-
         .toast-success { border-color: rgba(var(--accent-rgb), 0.4); }
-        .toast-success::before {
-            content: '\2713 ';
-            color: var(--accent);
-            font-weight: 700;
-        }
-
+        .toast-success::before { content: '\2713 '; color: var(--accent); font-weight: 700; }
         .toast-error { border-color: rgba(var(--danger-rgb), 0.4); }
-        .toast-error::before {
-            content: '\2717 ';
-            color: var(--danger);
-            font-weight: 700;
-        }
-
-        .toast-info::before {
-            content: '\203A ';
-            color: var(--text-sec);
-            font-weight: 700;
-        }
+        .toast-error::before { content: '\2717 '; color: var(--danger); font-weight: 700; }
+        .toast-info::before { content: '\203A '; color: var(--text-sec); font-weight: 700; }
 
         .app-footer {
             text-align: center;
@@ -654,15 +599,8 @@
             }
         }
 
-        :focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        button:focus-visible, textarea:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
         .warn-banner {
             display: flex;
@@ -679,12 +617,7 @@
             line-height: 1.5;
         }
 
-        .warn-banner svg {
-            width: 14px;
-            height: 14px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
+        .warn-banner svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
 
         .format-badge {
             display: inline-block;
@@ -727,7 +660,8 @@
 
         <main class="panels-grid">
 
-            <section class="panel" id="encode-panel" aria-label="Hide a message in an image">
+            <!-- ENCODE PANEL -->
+            <section class="panel" aria-label="Hide a message in an image">
                 <div class="panel-header">
                     <div class="panel-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -738,8 +672,7 @@
                     <h2>HIDE MESSAGE</h2>
                 </div>
 
-                <div class="drop-zone" id="enc-drop" role="button" tabindex="0"
-                     aria-label="Drop a carrier image here or click to browse">
+                <div class="drop-zone" id="enc-drop" role="button" tabindex="0" aria-label="Drop a carrier image here or click to browse">
                     <div class="drop-default">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -804,7 +737,8 @@
                 </button>
             </section>
 
-            <section class="panel" id="decode-panel" aria-label="Reveal a hidden message from an image">
+            <!-- DECODE PANEL -->
+            <section class="panel" aria-label="Reveal a hidden message from an image">
                 <div class="panel-header">
                     <div class="panel-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -815,8 +749,7 @@
                     <h2>REVEAL MESSAGE</h2>
                 </div>
 
-                <div class="drop-zone" id="dec-drop" role="button" tabindex="0"
-                     aria-label="Drop an encoded image here or click to browse">
+                <div class="drop-zone" id="dec-drop" role="button" tabindex="0" aria-label="Drop an encoded image here or click to browse">
                     <div class="drop-default">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -836,6 +769,15 @@
                     </div>
                 </div>
                 <input type="file" id="dec-file-input" accept="image/*" hidden>
+
+                <div class="warn-banner" id="dec-jpeg-warn" style="display:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>This is a JPEG file. If this image was re-saved as JPEG after encoding, the hidden data is permanently destroyed by lossy compression.</span>
+                </div>
 
                 <button class="btn btn-primary" id="dec-btn" disabled>
                     <span class="btn-label">Decode Message</span>
@@ -877,80 +819,65 @@
 
     <script>
     /* ==========================================================================
-       STEGANOGRAPHY LAB — Complete LSB Encode / Decode Implementation
-       ==========================================================================
-       Algorithm Overview:
-       1. Convert the secret message to UTF-8 bytes via TextEncoder
-       2. Prepend a 32-bit (big-endian) header storing the byte count
-       3. For each bit in the combined binary payload, modify the LSB of
-          the Red, Green, then Blue channel of successive pixels
-       4. The Alpha channel (index 3 of each pixel) is never touched
-       5. Decoding reads the 32-bit header first, then extracts exactly
-          that many bytes of payload
+       STEGANOGRAPHY LAB — LSB Encode / Decode
        ========================================================================== */
 
     (function() {
         'use strict';
 
-        // ====================================================================
-        // DOM REFERENCES
-        // ====================================================================
         var $ = function(sel) { return document.querySelector(sel); };
 
-        // Encode panel elements
-        var encDrop        = $('#enc-drop');
-        var encFileInput   = $('#enc-file-input');
-        var encPreviewImg  = $('#enc-preview-img');
-        var encFileName    = $('#enc-file-name');
-        var encFileMeta    = $('#enc-file-meta');
-        var encFileCap     = $('#enc-file-capacity');
-        var encFormatBadge = $('#enc-format-badge');
-        var encRemoveBtn   = $('#enc-remove');
-        var encJpegWarn    = $('#enc-jpeg-warn');
-        var secretMsg      = $('#secret-msg');
-        var encByteCount   = $('#enc-byte-count');
-        var encCapLabel    = $('#enc-cap-label');
-        var encCapBar      = $('#enc-cap-bar');
-        var encCapFill     = $('#enc-cap-fill');
-        var encBtn         = $('#enc-btn');
-        var encProgress    = $('#enc-progress');
-        var encProgressFill= $('#enc-progress-fill');
-        var encProgressPct = $('#enc-progress-pct');
-        var encDownload    = $('#enc-download');
+        // --- DOM References (Encode) ---
+        var encDrop         = $('#enc-drop');
+        var encFileInput    = $('#enc-file-input');
+        var encPreviewImg   = $('#enc-preview-img');
+        var encFileName     = $('#enc-file-name');
+        var encFileMeta     = $('#enc-file-meta');
+        var encFileCap      = $('#enc-file-capacity');
+        var encFormatBadge  = $('#enc-format-badge');
+        var encRemoveBtn    = $('#enc-remove');
+        var encJpegWarn     = $('#enc-jpeg-warn');
+        var secretMsg       = $('#secret-msg');
+        var encByteCount    = $('#enc-byte-count');
+        var encCapLabel     = $('#enc-cap-label');
+        var encCapBar       = $('#enc-cap-bar');
+        var encCapFill      = $('#enc-cap-fill');
+        var encBtn          = $('#enc-btn');
+        var encProgress     = $('#enc-progress');
+        var encProgressFill = $('#enc-progress-fill');
+        var encProgressPct  = $('#enc-progress-pct');
+        var encDownload     = $('#enc-download');
 
-        // Decode panel elements
-        var decDrop        = $('#dec-drop');
-        var decFileInput   = $('#dec-file-input');
-        var decPreviewImg  = $('#dec-preview-img');
-        var decFileName    = $('#dec-file-name');
-        var decFileMeta    = $('#dec-file-meta');
-        var decRemoveBtn   = $('#dec-remove');
-        var decBtn         = $('#dec-btn');
-        var decProgress    = $('#dec-progress');
-        var decProgressFill= $('#dec-progress-fill');
-        var decProgressPct = $('#dec-progress-pct');
-        var decResultArea  = $('#dec-result-area');
-        var decResultBox   = $('#dec-result-box');
+        // --- DOM References (Decode) ---
+        var decDrop         = $('#dec-drop');
+        var decFileInput    = $('#dec-file-input');
+        var decPreviewImg   = $('#dec-preview-img');
+        var decFileName     = $('#dec-file-name');
+        var decFileMeta     = $('#dec-file-meta');
+        var decRemoveBtn    = $('#dec-remove');
+        var decJpegWarn     = $('#dec-jpeg-warn');
+        var decBtn          = $('#dec-btn');
+        var decProgress     = $('#dec-progress');
+        var decProgressFill = $('#dec-progress-fill');
+        var decProgressPct  = $('#dec-progress-pct');
+        var decResultArea   = $('#dec-result-area');
+        var decResultBox    = $('#dec-result-box');
         var decResultActions = $('#dec-result-actions');
-        var decCopyBtn     = $('#dec-copy-btn');
+        var decCopyBtn      = $('#dec-copy-btn');
 
-        // ====================================================================
-        // APPLICATION STATE
-        // ====================================================================
+        // --- State ---
         var encImageLoaded = false;
         var encImageWidth  = 0;
         var encImageHeight = 0;
         var encMaxBytes    = 0;
         var encOrigName    = '';
         var encImageData   = null;
-
         var decImageLoaded = false;
         var decImageData   = null;
-
         var isProcessing   = false;
 
         // ====================================================================
-        // UTILITY: Toast Notifications
+        // TOAST NOTIFICATIONS
         // ====================================================================
         function showToast(message, type) {
             type = type || 'info';
@@ -959,31 +886,33 @@
             toast.className = 'toast toast-' + type;
             toast.textContent = message;
             container.appendChild(toast);
-
             requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                    toast.classList.add('show');
-                });
+                requestAnimationFrame(function() { toast.classList.add('show'); });
             });
-
             setTimeout(function() {
                 toast.classList.remove('show');
                 setTimeout(function() { toast.remove(); }, 400);
-            }, 3500);
+            }, 4000);
         }
 
         // ====================================================================
-        // UTILITY: Text to Binary Conversion (UTF-8)
+        // BINARY CONVERSION UTILITIES
         // ====================================================================
 
         /**
-         * Convert a 32-bit unsigned integer to a 32-character binary string.
-         * Uses big-endian order (most significant bit first).
-         * Example: 257 -> "00000000000000000000000100000001"
+         * uint32 -> 32-bit binary string (big-endian, MSB first)
          *
-         * The loop iterates from bit 31 down to 0:
-         *   (value >>> i) & 1 extracts the i-th bit from the left.
-         *   >>> is unsigned right-shift, ensuring bit 31 stays 0 for positive values.
+         * We iterate from bit 31 down to 0. For each position:
+         *   (value >>> i) & 1
+         *
+         * >>> is unsigned right-shift: shifts bits right, fills with zeros.
+         * & 1 masks everything except the least significant bit.
+         *
+         * Example: value = 257 (binary: 100000001)
+         *   i=31..9: all zeros  (257 >>> 9 = 0, & 1 = 0)
+         *   i=8:     (257 >>> 8) & 1 = 1 & 1 = 1   <- the '1' in bit 8
+         *   i=7..0:  builds "00000001" from the lower byte
+         *   Result: "00000000000000000000000100000001"
          */
         function uint32ToBinary(value) {
             var bits = '';
@@ -994,13 +923,23 @@
         }
 
         /**
-         * Convert a 32-character binary string back to a 32-bit unsigned integer.
+         * 32-bit binary string -> uint32
          *
          * We accumulate left-to-right:
          *   value = (value << 1) | nextBit
-         * Each iteration shifts all previously read bits left by one position
-         * and inserts the new bit at the LSB position.
-         * >>> 0 at the end coerces the result to an unsigned 32-bit integer.
+         *
+         * << 1 shifts all previously accumulated bits left by one position
+         * (making room for the new bit at the rightmost position).
+         * | nextBit inserts the new bit at the LSB.
+         *
+         * Example: "100000001"
+         *   After '1':   value = 1
+         *   After '0':   value = (1<<1)|0 = 2
+         *   After '0':   value = (2<<1)|0 = 4
+         *   ...
+         *   After last '1': value = 257
+         *
+         * >>> 0 coerces to unsigned 32-bit (important for bit 31).
          */
         function binaryToUint32(binaryStr) {
             var value = 0;
@@ -1011,225 +950,199 @@
         }
 
         /**
-         * Convert a binary string (must be multiple of 8) back to UTF-8 text.
-         * Groups bits into 8-bit chunks, parses each as a byte, then decodes.
+         * Binary string (multiple of 8) -> UTF-8 text
+         * Groups into 8-bit chunks, parses each as a byte, decodes with TextDecoder.
          */
         function binaryToText(binaryStr) {
             var bytes = [];
             for (var i = 0; i < binaryStr.length; i += 8) {
                 bytes.push(parseInt(binaryStr.substr(i, 8), 2));
             }
-            var decoder = new TextDecoder();
-            return decoder.decode(new Uint8Array(bytes));
+            return new TextDecoder().decode(new Uint8Array(bytes));
         }
 
         // ====================================================================
-        // UTILITY: Image Loading (File -> Canvas -> ImageData)
+        // IMAGE LOADING
         // ====================================================================
 
         /**
-         * Load an image file into an off-screen canvas and return its ImageData.
-         * The canvas must match the image's natural dimensions exactly — any
-         * scaling would interpolate pixel values and destroy existing LSB data
-         * (critical when decoding an already-encoded image).
+         * Load a File into an off-screen canvas, return { imageData, width, height }.
+         * Canvas dimensions match the image exactly — no scaling, no interpolation.
+         * This is critical: scaling would average pixel values and destroy LSB data.
          */
         function loadImageFromFile(file) {
             return new Promise(function(resolve, reject) {
                 var reader = new FileReader();
-
-                reader.onerror = function() {
-                    reject(new Error('Failed to read file'));
-                };
-
+                reader.onerror = function() { reject(new Error('Failed to read file')); };
                 reader.onload = function() {
                     var img = new Image();
-
-                    img.onerror = function() {
-                        reject(new Error('Failed to decode image. File may be corrupted.'));
-                    };
-
+                    img.onerror = function() { reject(new Error('Failed to decode image.')); };
                     img.onload = function() {
                         var canvas = document.createElement('canvas');
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         var ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0);
-
-                        // getImageData returns a flat Uint8ClampedArray in RGBA order:
-                        // [R0, G0, B0, A0, R1, G1, B1, A1, R2, G2, B2, A2, ...]
-                        // Each pixel occupies 4 consecutive indices.
-                        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
+                        /*
+                         * getImageData returns a flat Uint8ClampedArray in RGBA order:
+                         *   Index 0-3:   Pixel 0 (R, G, B, A)
+                         *   Index 4-7:   Pixel 1 (R, G, B, A)
+                         *   Index 8-11:  Pixel 2 (R, G, B, A)
+                         *   ...
+                         * Each pixel occupies exactly 4 consecutive array indices.
+                         * We only modify indices 0,1,2 of each pixel (R,G,B).
+                         * Index 3 (Alpha) is NEVER touched.
+                         */
                         resolve({
-                            imageData: imageData,
+                            imageData: ctx.getImageData(0, 0, canvas.width, canvas.height),
                             width: canvas.width,
                             height: canvas.height
                         });
                     };
-
                     img.src = reader.result;
                 };
-
                 reader.readAsDataURL(file);
             });
         }
 
         // ====================================================================
-        // UTILITY: Calculate Maximum Message Capacity
+        // CAPACITY CALCULATION
         // ====================================================================
 
         /**
-         * Calculate the maximum message BYTES an image can hold.
+         * Max message bytes an image can hold.
          *
-         * Each pixel provides 3 usable bits (R, G, B — we skip Alpha).
-         * Total bits = width * height * 3
-         * Subtract 32 bits for the length header.
-         * Remaining bits / 8 = available message bytes.
+         * Each pixel = 3 usable bits (R, G, B). Alpha is skipped.
+         * First 32 bits reserved for the length header.
+         * Remaining bits / 8 = max message bytes.
          */
         function calcMaxBytes(width, height) {
-            var totalPixels = width * height;
-            var totalBits = totalPixels * 3;
-            var availableBits = totalBits - 32;
-            return Math.floor(availableBits / 8);
+            return Math.floor((width * height * 3 - 32) / 8);
         }
 
         // ====================================================================
-        // CORE: LSB ENCODING (Chunked, Non-Blocking)
+        // CORE: LSB ENCODING
         // ====================================================================
 
         /**
-         * Encode a secret message into image pixel data using LSB substitution.
+         * Hide a message in image pixel data using LSB substitution.
          *
-         * THE BITWISE OPERATION — Setting the LSB:
-         * ───────────────────────────────────────────
-         * Each color channel is an 8-bit integer (0-255).
+         * THE BITWISE OPERATION (writing a single bit):
+         * ─────────────────────────────────────────────
+         *   pixels[base] = (pixels[base] & 0xFE) | bitValue
          *
-         *   pixel[i] & 0xFE     -> Clears the LSB to 0
-         *                          0xFE = 11111110 in binary
-         *                          Example: 173 (10101101) & 254 (11111110) = 172 (10101100)
+         *   Step 1: & 0xFE (binary 11111110)
+         *           Clears the LSB to 0, preserves bits 1-7 unchanged.
+         *           Example: 173 (10101101) & 254 (11111110) = 172 (10101100)
          *
-         *   result | bitValue   -> Sets the LSB to 0 or 1
-         *                          Example: 172 (10101100) | 1 (00000001) = 173 (10101101)
-         *                          Example: 172 (10101100) | 0 (00000000) = 172 (10101100)
+         *   Step 2: | bitValue (0 or 1)
+         *           Sets the LSB to the desired value.
+         *           Example: 172 (10101100) | 1 (00000001) = 173 (10101101)
          *
-         * The maximum change per channel is +/-1 — invisible to the human eye.
+         *   Net effect: channel value changes by at most +/-1.
+         *   This is below the just-noticeable difference for human vision.
          *
-         * DATA LAYOUT:
-         *   Bits 0-31:   Message byte-length as uint32 big-endian
-         *   Bits 32+:    UTF-8 encoded message bytes, 8 bits each
-         *   Stored as:   Pixel0[R,G,B], Pixel1[R,G,B], Pixel2[R,G,B], ...
-         *   Alpha (index 3 of each pixel) is NEVER modified.
-         *
-         * @param {ImageData} imageData - The pixel data to modify
-         * @param {string} message      - The secret message to hide
-         * @param {function} onProgress - Callback with progress 0.0-1.0
-         * @returns {Promise<ImageData>} - The modified pixel data
+         * DATA LAYOUT in the pixel array:
+         *   Pixel 0: R[bit0]  G[bit1]  B[bit2]  A[untouched]
+         *   Pixel 1: R[bit3]  G[bit4]  B[bit5]  A[untouched]
+         *   Pixel 2: R[bit6]  G[bit7]  B[bit8]  A[untouched]
+         *   ...
+         *   Bits 0-31:   32-bit header = message byte-length (uint32 big-endian)
+         *   Bits 32+:    UTF-8 encoded message bytes (8 bits each)
          */
         function encodeLSB(imageData, message, onProgress) {
             return new Promise(function(resolve, reject) {
 
-                // Step 1: Build the complete binary payload
+                // Build binary payload
                 var encoder = new TextEncoder();
                 var msgBytes = encoder.encode(message);
-                var byteLength = msgBytes.length;
-
-                // 32-bit header stores the message byte count
-                var headerBits = uint32ToBinary(byteLength);
-
-                // Convert each message byte to 8-bit binary
+                var headerBits = uint32ToBinary(msgBytes.length);
                 var messageBits = '';
                 for (var m = 0; m < msgBytes.length; m++) {
                     messageBits += msgBytes[m].toString(2).padStart(8, '0');
                 }
-
-                // Full payload: header + message
                 var payload = headerBits + messageBits;
 
-                // Step 2: Capacity check
+                // Capacity check
                 var pixels = imageData.data;
                 var totalPixelCount = pixels.length / 4;
-                var maxBits = totalPixelCount * 3;
-
-                if (payload.length > maxBits) {
-                    reject(new Error(
-                        'Message too large for this image. Need ' + payload.length +
-                        ' bits but only ' + maxBits + ' bits available.'
-                    ));
+                if (payload.length > totalPixelCount * 3) {
+                    reject(new Error('Message too large for this image.'));
                     return;
                 }
 
-                // Step 3: Chunked encoding to keep UI responsive
-                var CHUNK_SIZE = 80000;
-                var bitIndex = 0;
-                var pixelIndex = 0;
-                var totalPixelsNeeded = Math.ceil(payload.length / 3);
+                // Chunked non-blocking encoding
+                var CHUNK = 80000;
+                var bitIdx = 0;
+                var pxlIdx = 0;
+                var totalPxlNeeded = Math.ceil(payload.length / 3);
 
-                function processChunk() {
-                    var endPixel = Math.min(pixelIndex + CHUNK_SIZE, totalPixelsNeeded);
-
-                    for (var p = pixelIndex; p < endPixel; p++) {
-                        var base = p * 4;
-
-                        // RED channel (offset 0): clear LSB with & 0xFE, set with | bit
-                        if (bitIndex < payload.length) {
-                            pixels[base]     = (pixels[base]     & 0xFE) | parseInt(payload[bitIndex]);
-                            bitIndex++;
+                function chunk() {
+                    var end = Math.min(pxlIdx + CHUNK, totalPxlNeeded);
+                    for (var p = pxlIdx; p < end; p++) {
+                        var b = p * 4;
+                        // RED — clear LSB then set to message bit
+                        if (bitIdx < payload.length) {
+                            pixels[b]     = (pixels[b]     & 0xFE) | parseInt(payload[bitIdx++]);
                         }
-
-                        // GREEN channel (offset 1)
-                        if (bitIndex < payload.length) {
-                            pixels[base + 1] = (pixels[base + 1] & 0xFE) | parseInt(payload[bitIndex]);
-                            bitIndex++;
+                        // GREEN
+                        if (bitIdx < payload.length) {
+                            pixels[b + 1] = (pixels[b + 1] & 0xFE) | parseInt(payload[bitIdx++]);
                         }
-
-                        // BLUE channel (offset 2) — skip offset 3 (Alpha)
-                        if (bitIndex < payload.length) {
-                            pixels[base + 2] = (pixels[base + 2] & 0xFE) | parseInt(payload[bitIndex]);
-                            bitIndex++;
+                        // BLUE — skip index b+2 (Alpha) entirely
+                        if (bitIdx < payload.length) {
+                            pixels[b + 2] = (pixels[b + 2] & 0xFE) | parseInt(payload[bitIdx++]);
                         }
                     }
+                    pxlIdx = end;
+                    if (onProgress) onProgress(Math.min(pxlIdx / totalPxlNeeded, 1));
 
-                    pixelIndex = endPixel;
-
-                    if (onProgress) {
-                        onProgress(Math.min(pixelIndex / totalPixelsNeeded, 1));
-                    }
-
-                    if (pixelIndex < totalPixelsNeeded) {
-                        // Yield to the browser event loop, then continue
-                        setTimeout(processChunk, 0);
+                    if (pxlIdx < totalPxlNeeded) {
+                        setTimeout(chunk, 0);
                     } else {
                         resolve(imageData);
                     }
                 }
-
-                setTimeout(processChunk, 10);
+                setTimeout(chunk, 10);
             });
         }
 
         // ====================================================================
-        // CORE: LSB DECODING (Chunked, Non-Blocking)
+        // CORE: LSB DECODING  *** FIXED VERSION ***
         // ====================================================================
 
         /**
-         * Decode a hidden message from image pixel data.
+         * Extract a hidden message from image pixel data.
          *
-         * THE BITWISE OPERATION — Reading the LSB:
-         * ───────────────────────────────────────────
-         *   pixel[i] & 1   -> Extracts only the LSB
-         *                      0x01 = 00000001 in binary
-         *                      Example: 173 (10101101) & 1 (00000001) = 1
-         *                      Example: 172 (10101100) & 1 (00000001) = 0
+         * THE BITWISE OPERATION (reading a single bit):
+         * ─────────────────────────────────────────────
+         *   pixels[base] & 1
          *
-         * DECODING PROTOCOL:
-         *   1. Read first 32 bits (~11 pixels) as uint32 -> message byte length
-         *   2. Validate length is within image capacity and sanity bounds
-         *   3. Read exactly byteLength * 8 more bits
-         *   4. Group into 8-bit chunks, convert to bytes, decode as UTF-8
+         *   & 1 (binary 00000001) masks all bits except the LSB.
+         *   Example: 173 (10101101) & 1 (00000001) = 1
+         *   Example: 172 (10101100) & 1 (00000001) = 0
          *
-         * @param {ImageData} imageData - The pixel data to read from
-         * @param {function} onProgress - Callback with progress 0.0-1.0
-         * @returns {Promise<string>} - The decoded secret message
+         * *** CRITICAL BUG FIX ***
+         * ────────────────────────
+         * The previous version read the 32-bit header in a SEPARATE loop that
+         * could stop mid-pixel (e.g., after reading R and G but not B of a pixel).
+         * It then incremented the pixel counter and started reading the message
+         * from the NEXT pixel, SKIPPING the remaining channel(s) of the last
+         * header pixel. This caused a permanent bit offset of 1 or 2 positions,
+         * corrupting every byte of the decoded message.
+         *
+         * Example of the bug:
+         *   Header = 32 bits. At 3 bits/pixel, that's 10 full pixels (30 bits)
+         *   + 2 more bits from pixel 10 (R and G). The loop stops, pi becomes 11.
+         *   But the encoder put bit #32 (first message bit) in pixel 10's BLUE.
+         *   The decoder starts reading the message from pixel 11's RED = bit #33.
+         *   Every single message bit is shifted by 1 position -> total corruption.
+         *
+         * THE FIX:
+         * Read the header from COMPLETE pixels only (always reading all 3 channels
+         * R, G, B of each pixel). This ensures pi stays aligned to pixel boundaries.
+         * Any extra bits read beyond the 32-bit header naturally become the start
+         * of the message data — they're already in the correct position in allBits.
          */
         function decodeLSB(imageData, onProgress) {
             return new Promise(function(resolve, reject) {
@@ -1238,60 +1151,83 @@
                 var totalPixelCount = pixels.length / 4;
                 var maxCapacity = Math.floor((totalPixelCount * 3 - 32) / 8);
 
-                // Step 1: Extract 32-bit header (synchronous — only ~11 pixels)
-                var headerBits = '';
+                /*
+                 * PHASE 1: Read enough COMPLETE pixels to cover the 32-bit header.
+                 *
+                 * We need at least 32 bits. Each complete pixel gives 3 bits.
+                 * ceil(32/3) = 11 pixels = 33 bits (1 extra, which is fine).
+                 *
+                 * By always reading ALL 3 channels of each pixel (no early exit
+                 * mid-pixel), we guarantee that pi is aligned to a pixel boundary
+                 * when we transition to Phase 2. The extra bits beyond position 31
+                 * are simply the first bits of the message, already in the correct
+                 * position within allBits.
+                 */
+                var HEADER_PIXELS = Math.ceil(32 / 3); // = 11 pixels
+                var allBits = '';
                 var pi = 0;
 
-                while (headerBits.length < 32 && pi < totalPixelCount) {
+                while (pi < HEADER_PIXELS && pi < totalPixelCount) {
                     var base = pi * 4;
-                    // & 1 isolates the least significant bit
-                    headerBits += (pixels[base]     & 1).toString();
-                    if (headerBits.length < 32)
-                        headerBits += (pixels[base + 1] & 1).toString();
-                    if (headerBits.length < 32)
-                        headerBits += (pixels[base + 2] & 1).toString();
+                    // Read ALL 3 channels (R, G, B) — never stop mid-pixel
+                    allBits += (pixels[base]     & 1).toString(); // Red LSB
+                    allBits += (pixels[base + 1] & 1).toString(); // Green LSB
+                    allBits += (pixels[base + 2] & 1).toString(); // Blue LSB
                     pi++;
                 }
 
-                if (headerBits.length < 32) {
+                if (allBits.length < 32) {
                     reject(new Error('Image too small to contain any hidden data.'));
                     return;
                 }
 
-                var messageByteLength = binaryToUint32(headerBits);
+                // Parse the 32-bit header (first 32 chars of allBits)
+                var messageByteLength = binaryToUint32(allBits.substr(0, 32));
 
-                // Step 2: Validate the header
+                // --- Header validation ---
                 if (messageByteLength === 0) {
                     reject(new Error('No hidden message found (empty payload).'));
                     return;
                 }
                 if (messageByteLength > maxCapacity) {
                     reject(new Error(
-                        'No valid hidden message found. The decoded length (' +
-                        messageByteLength.toLocaleString() + ' bytes) exceeds image capacity (' +
-                        maxCapacity.toLocaleString() + ' bytes). This image was likely not encoded.'
+                        'No valid hidden message found. Decoded length (' +
+                        messageByteLength.toLocaleString() + ' bytes) exceeds this ' +
+                        "image's capacity (" + maxCapacity.toLocaleString() +
+                        ' bytes). This image was likely not encoded with this tool.'
                     ));
                     return;
                 }
                 if (messageByteLength > 5000000) {
                     reject(new Error(
-                        'Decoded header suggests an implausibly large message (' +
-                        messageByteLength.toLocaleString() + ' bytes). This image was likely not encoded.'
+                        'Decoded header is implausibly large (' +
+                        messageByteLength.toLocaleString() +
+                        ' bytes). This image was likely not encoded.'
                     ));
                     return;
                 }
 
-                // Step 3: Extract message bits (chunked for large payloads)
+                /*
+                 * PHASE 2: Continue reading message bits (chunked for large payloads).
+                 *
+                 * pi is already aligned to a pixel boundary (thanks to Phase 1
+                 * reading complete pixels). We keep appending to allBits until
+                 * we have enough for the header + full message.
+                 *
+                 * totalBitsToRead = 32 (header) + messageByteLength * 8 (message)
+                 *
+                 * After the loop, we extract the message starting at position 32
+                 * in allBits — the extra bits from Phase 1 (beyond position 31)
+                 * are already correctly placed there.
+                 */
                 var totalBitsToRead = 32 + messageByteLength * 8;
-                var allBits = headerBits;
-                var CHUNK_SIZE = 80000;
+                var CHUNK = 80000;
 
                 function processChunk() {
-                    var endPixel = Math.min(pi + CHUNK_SIZE, totalPixelCount);
+                    var endPixel = Math.min(pi + CHUNK, totalPixelCount);
 
                     for (var p = pi; p < endPixel; p++) {
                         if (allBits.length >= totalBitsToRead) break;
-
                         var b = p * 4;
                         allBits += (pixels[b]     & 1).toString();
                         if (allBits.length < totalBitsToRead)
@@ -1301,27 +1237,28 @@
                     }
 
                     pi = endPixel;
-
-                    if (onProgress) {
-                        onProgress(Math.min(allBits.length / totalBitsToRead, 1));
-                    }
+                    if (onProgress) onProgress(Math.min(allBits.length / totalBitsToRead, 1));
 
                     if (allBits.length < totalBitsToRead && pi < totalPixelCount) {
                         setTimeout(processChunk, 0);
                     } else {
-                        // Step 4: Convert bits back to text
-                        var messageBits = allBits.substr(32, messageByteLength * 8);
-
-                        if (messageBits.length < messageByteLength * 8) {
-                            reject(new Error('Image ended before all message bits could be read.'));
+                        // Check we actually got enough bits
+                        if (allBits.length < totalBitsToRead) {
+                            reject(new Error('Image data ended before the full message could be read.'));
                             return;
                         }
+
+                        /*
+                         * Extract message: skip the 32-bit header (positions 0-31),
+                         * take exactly messageByteLength * 8 bits for the message.
+                         */
+                        var messageBits = allBits.substr(32, messageByteLength * 8);
 
                         try {
                             var message = binaryToText(messageBits);
                             resolve(message);
                         } catch (e) {
-                            reject(new Error('Failed to decode message bytes as valid UTF-8 text.'));
+                            reject(new Error('Decoded bytes are not valid UTF-8 text. The image may have been re-compressed.'));
                         }
                     }
                 }
@@ -1331,196 +1268,109 @@
         }
 
         // ====================================================================
-        // ROBUST DOWNLOAD: Blob + ObjectURL approach
+        // ROBUST DOWNLOAD (Blob + ObjectURL)
         // ====================================================================
 
-        /**
-         * Trigger a file download from a URL string.
-         *
-         * Creates a hidden anchor element, appends it to the DOM body,
-         * and programmatically clicks it. The element MUST remain in the
-         * DOM tree briefly — Firefox silently ignores click() on detached
-         * elements, and some mobile browsers cancel downloads if the
-         * anchor is removed synchronously before the download initiates.
-         */
         function triggerDownload(url, filename) {
             var link = document.createElement('a');
             link.download = filename;
             link.href = url;
             link.style.display = 'none';
-
             document.body.appendChild(link);
-
-            // 50ms delay ensures the browser registers the element in the
-            // document tree before we trigger the click event
             setTimeout(function() {
                 link.click();
-
-                // Remove after another 200ms — removing too quickly can
-                // cancel the download in certain browser implementations
                 setTimeout(function() {
-                    if (link.parentNode) {
-                        link.parentNode.removeChild(link);
-                    }
+                    if (link.parentNode) link.parentNode.removeChild(link);
                 }, 200);
             }, 50);
         }
 
-        /**
-         * Download the encoded canvas as a PNG file.
-         *
-         * Uses canvas.toBlob() instead of toDataURL() because:
-         *   - toDataURL builds a massive base64 string in memory; it can
-         *     silently fail for large canvases (>10-20 megapixels)
-         *   - toBlob streams the result into a Blob object, which is far
-         *     more memory-efficient and reliable across browsers
-         *
-         * Falls back to toDataURL if toBlob is unavailable or returns null.
-         */
         function handleDownload() {
             if (!encDownload._canvas) return;
-
             var canvas = encDownload._canvas;
             var filename = encDownload._filename || 'stego_image.png';
 
-            // toBlob is asynchronous — the callback receives a Blob or null
             canvas.toBlob(function(blob) {
                 if (!blob) {
-                    // Fallback for browsers where toBlob fails
                     try {
-                        var dataURL = canvas.toDataURL('image/png');
-                        triggerDownload(dataURL, filename);
+                        triggerDownload(canvas.toDataURL('image/png'), filename);
                         showToast('Image downloaded as PNG', 'success');
                     } catch (e) {
-                        showToast('Download failed — try right-clicking to save.', 'error');
-                        console.error('Download error:', e);
+                        showToast('Download failed.', 'error');
                     }
                     return;
                 }
-
-                // Create a temporary internal blob:// URL from the Blob.
-                // More memory-efficient than a base64 data URL for large images.
                 var blobURL = URL.createObjectURL(blob);
-
                 triggerDownload(blobURL, filename);
-
-                // Revoke the object URL after 5 seconds to free memory.
-                // Cannot revoke immediately — the browser needs time to
-                // initiate the download from the URL.
-                setTimeout(function() {
-                    URL.revokeObjectURL(blobURL);
-                }, 5000);
-
+                setTimeout(function() { URL.revokeObjectURL(blobURL); }, 5000);
                 showToast('Image downloaded as PNG', 'success');
             }, 'image/png');
         }
 
         // ====================================================================
-        // DRAG & DROP HANDLING
+        // DRAG & DROP
         // ====================================================================
 
-        /**
-         * Set up drag-and-drop events on a drop zone element.
-         * Handles dragenter, dragover, dragleave, and drop events.
-         * Also handles click-to-browse and keyboard accessibility.
-         */
         function setupDropZone(dropEl, fileInput, onFile) {
             dropEl.addEventListener('click', function(e) {
                 if (e.target.closest('.btn-remove')) return;
                 fileInput.click();
             });
-
             dropEl.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    fileInput.click();
-                }
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
             });
-
             fileInput.addEventListener('change', function() {
-                if (fileInput.files.length > 0) {
-                    onFile(fileInput.files[0]);
-                }
+                if (fileInput.files.length > 0) onFile(fileInput.files[0]);
             });
-
             dropEl.addEventListener('dragenter', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                dropEl.classList.add('drag-over');
+                e.preventDefault(); e.stopPropagation(); dropEl.classList.add('drag-over');
             });
-
-            dropEl.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-
+            dropEl.addEventListener('dragover', function(e) { e.preventDefault(); e.stopPropagation(); });
             dropEl.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                // Only remove visual state when truly leaving the drop zone
-                // (not when moving between child elements)
-                if (!dropEl.contains(e.relatedTarget)) {
-                    dropEl.classList.remove('drag-over');
-                }
+                e.preventDefault(); e.stopPropagation();
+                if (!dropEl.contains(e.relatedTarget)) dropEl.classList.remove('drag-over');
             });
-
             dropEl.addEventListener('drop', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                dropEl.classList.remove('drag-over');
-
-                var files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    onFile(files[0]);
-                }
+                e.preventDefault(); e.stopPropagation(); dropEl.classList.remove('drag-over');
+                if (e.dataTransfer.files.length > 0) onFile(e.dataTransfer.files[0]);
             });
         }
 
         // ====================================================================
-        // ENCODE PANEL: Image Loading
+        // ENCODE PANEL LOGIC
         // ====================================================================
 
         function handleEncFile(file) {
             if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file.', 'error');
-                return;
+                showToast('Please select an image file.', 'error'); return;
             }
-
             encBtn.disabled = true;
             encBtn.querySelector('.btn-label').textContent = 'Loading image...';
 
-            loadImageFromFile(file).then(function(result) {
+            loadImageFromFile(file).then(function(r) {
                 encImageLoaded = true;
-                encImageWidth = result.width;
-                encImageHeight = result.height;
-                encImageData = result.imageData;
+                encImageWidth = r.width;
+                encImageHeight = r.height;
+                encImageData = r.imageData;
                 encOrigName = file.name.replace(/\.[^.]+$/, '');
 
-                // Update preview
                 encPreviewImg.src = URL.createObjectURL(file);
                 encFileName.textContent = file.name;
-                encFileMeta.textContent = result.width + ' \u00d7 ' + result.height + ' px';
-
-                encMaxBytes = calcMaxBytes(result.width, result.height);
+                encFileMeta.textContent = r.width + ' \u00d7 ' + r.height + ' px';
+                encMaxBytes = calcMaxBytes(r.width, r.height);
                 encFileCap.textContent = 'Capacity: ' + encMaxBytes.toLocaleString() + ' bytes';
 
-                // Format badge
                 var ext = file.name.split('.').pop().toUpperCase();
                 encFormatBadge.textContent = ext;
                 encFormatBadge.className = 'format-badge ' + (ext === 'PNG' ? 'png' : 'other');
-
-                // JPEG warning
                 encJpegWarn.style.display = (ext === 'JPG' || ext === 'JPEG') ? 'flex' : 'none';
 
                 encDrop.classList.add('has-image');
                 encDownload.style.display = 'none';
-
                 updateEncCapacity();
                 updateEncButton();
-
                 encBtn.querySelector('.btn-label').textContent = 'Encode Message';
                 showToast('Carrier image loaded', 'success');
-
             }).catch(function(err) {
                 showToast(err.message, 'error');
                 encBtn.querySelector('.btn-label').textContent = 'Encode Message';
@@ -1528,33 +1378,22 @@
         }
 
         function clearEncImage() {
-            encImageLoaded = false;
-            encImageData = null;
-            encMaxBytes = 0;
-            encOrigName = '';
+            encImageLoaded = false; encImageData = null;
+            encMaxBytes = 0; encOrigName = '';
             encDrop.classList.remove('has-image');
             encJpegWarn.style.display = 'none';
             encFileInput.value = '';
             encDownload.style.display = 'none';
             encProgress.classList.remove('active');
-            updateEncCapacity();
-            updateEncButton();
+            updateEncCapacity(); updateEncButton();
         }
 
-        // ====================================================================
-        // ENCODE PANEL: Capacity & Button State
-        // ====================================================================
-
-        function getSecretMessageBytes() {
-            var encoder = new TextEncoder();
-            return encoder.encode(secretMsg.value).length;
-        }
+        function getMsgBytes() { return new TextEncoder().encode(secretMsg.value).length; }
 
         function updateEncCapacity() {
-            var msgBytes = getSecretMessageBytes();
-
-            encByteCount.textContent = msgBytes.toLocaleString() + ' bytes';
-            encByteCount.classList.toggle('over', msgBytes > encMaxBytes && encImageLoaded);
+            var mb = getMsgBytes();
+            encByteCount.textContent = mb.toLocaleString() + ' bytes';
+            encByteCount.classList.toggle('over', mb > encMaxBytes && encImageLoaded);
 
             if (!encImageLoaded) {
                 encCapLabel.textContent = 'No image loaded';
@@ -1562,21 +1401,20 @@
                 encCapBar.classList.remove('visible');
                 return;
             }
-
             encCapBar.classList.add('visible');
-            var pct = Math.min((msgBytes / encMaxBytes) * 100, 100);
+            var pct = Math.min((mb / encMaxBytes) * 100, 100);
             encCapFill.style.width = pct + '%';
 
-            if (msgBytes === 0) {
+            if (mb === 0) {
                 encCapLabel.textContent = encMaxBytes.toLocaleString() + ' bytes available';
                 encCapLabel.className = 'capacity-label';
                 encCapFill.className = 'capacity-fill';
-            } else if (msgBytes <= encMaxBytes) {
-                encCapLabel.textContent = msgBytes.toLocaleString() + ' / ' + encMaxBytes.toLocaleString() + ' bytes';
+            } else if (mb <= encMaxBytes) {
+                encCapLabel.textContent = mb.toLocaleString() + ' / ' + encMaxBytes.toLocaleString() + ' bytes';
                 encCapLabel.className = 'capacity-label' + (pct > 80 ? ' warn' : ' ok');
                 encCapFill.className = 'capacity-fill' + (pct > 80 ? ' warn' : '');
             } else {
-                encCapLabel.textContent = 'Exceeds capacity by ' + (msgBytes - encMaxBytes).toLocaleString() + ' bytes';
+                encCapLabel.textContent = 'Exceeds by ' + (mb - encMaxBytes).toLocaleString() + ' bytes';
                 encCapLabel.className = 'capacity-label err';
                 encCapFill.className = 'capacity-fill err';
                 encCapFill.style.width = '100%';
@@ -1584,58 +1422,39 @@
         }
 
         function updateEncButton() {
-            var msgBytes = getSecretMessageBytes();
-            encBtn.disabled = !encImageLoaded || msgBytes === 0 || msgBytes > encMaxBytes || isProcessing;
+            var mb = getMsgBytes();
+            encBtn.disabled = !encImageLoaded || mb === 0 || mb > encMaxBytes || isProcessing;
         }
-
-        // ====================================================================
-        // ENCODE PANEL: Encode Action
-        // ====================================================================
 
         function handleEncode() {
             if (!encImageLoaded || isProcessing) return;
+            var mb = getMsgBytes();
+            if (mb === 0) { showToast('Enter a message first.', 'error'); return; }
+            if (mb > encMaxBytes) { showToast('Message too large for this image.', 'error'); return; }
 
-            var msgBytes = getSecretMessageBytes();
-            if (msgBytes === 0) {
-                showToast('Please enter a message to hide.', 'error');
-                return;
-            }
-            if (msgBytes > encMaxBytes) {
-                showToast('Message exceeds image capacity. Use a larger image or shorter message.', 'error');
-                return;
-            }
-
-            isProcessing = true;
-            encBtn.disabled = true;
+            isProcessing = true; encBtn.disabled = true;
             encBtn.querySelector('.btn-label').innerHTML = '<span class="spinner"></span> Encoding...';
             encDownload.style.display = 'none';
             encProgress.classList.add('active');
             encProgressFill.style.width = '0%';
             encProgressPct.textContent = '0%';
 
-            // Work on a COPY of the ImageData so the original preview is unaffected
-            var copyData = new ImageData(
+            var copy = new ImageData(
                 new Uint8ClampedArray(encImageData.data),
-                encImageData.width,
-                encImageData.height
+                encImageData.width, encImageData.height
             );
 
-            encodeLSB(copyData, secretMsg.value, function(progress) {
-                var pct = Math.round(progress * 100);
+            encodeLSB(copy, secretMsg.value, function(p) {
+                var pct = Math.round(p * 100);
                 encProgressFill.style.width = pct + '%';
                 encProgressPct.textContent = pct + '%';
-            }).then(function(encodedData) {
-                // Draw encoded image to a canvas for download
+            }).then(function(encoded) {
                 var canvas = document.createElement('canvas');
-                canvas.width = encodedData.width;
-                canvas.height = encodedData.height;
-                var ctx = canvas.getContext('2d');
-                ctx.putImageData(encodedData, 0, 0);
+                canvas.width = encoded.width; canvas.height = encoded.height;
+                canvas.getContext('2d').putImageData(encoded, 0, 0);
 
-                // Store canvas reference and filename for the download handler
                 encDownload._canvas = canvas;
                 encDownload._filename = encOrigName + '_stego.png';
-
                 encProgressFill.style.width = '100%';
                 encProgressPct.textContent = '100%';
 
@@ -1643,53 +1462,45 @@
                     encProgress.classList.remove('active');
                     encDownload.style.display = 'flex';
                     encBtn.querySelector('.btn-label').textContent = 'Encode Message';
-                    isProcessing = false;
-                    updateEncButton();
-                    showToast(
-                        'Message encoded successfully (' + msgBytes + ' bytes hidden)',
-                        'success'
-                    );
+                    isProcessing = false; updateEncButton();
+                    showToast('Encoded successfully (' + mb + ' bytes hidden)', 'success');
                 }, 400);
-
             }).catch(function(err) {
                 encProgress.classList.remove('active');
                 encBtn.querySelector('.btn-label').textContent = 'Encode Message';
-                isProcessing = false;
-                updateEncButton();
+                isProcessing = false; updateEncButton();
                 showToast(err.message, 'error');
             });
         }
 
         // ====================================================================
-        // DECODE PANEL: Image Loading
+        // DECODE PANEL LOGIC
         // ====================================================================
 
         function handleDecFile(file) {
             if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file.', 'error');
-                return;
+                showToast('Please select an image file.', 'error'); return;
             }
-
             decBtn.disabled = true;
             decBtn.querySelector('.btn-label').textContent = 'Loading image...';
-
             decResultArea.classList.remove('visible');
             decResultActions.style.display = 'none';
 
-            loadImageFromFile(file).then(function(result) {
+            loadImageFromFile(file).then(function(r) {
                 decImageLoaded = true;
-                decImageData = result.imageData;
+                decImageData = r.imageData;
 
                 decPreviewImg.src = URL.createObjectURL(file);
                 decFileName.textContent = file.name;
-                decFileMeta.textContent = result.width + ' \u00d7 ' + result.height + ' px';
+                decFileMeta.textContent = r.width + ' \u00d7 ' + r.height + ' px';
+
+                var ext = file.name.split('.').pop().toUpperCase();
+                decJpegWarn.style.display = (ext === 'JPG' || ext === 'JPEG') ? 'flex' : 'none';
 
                 decDrop.classList.add('has-image');
                 decBtn.disabled = false;
                 decBtn.querySelector('.btn-label').textContent = 'Decode Message';
-
-                showToast('Encoded image loaded', 'success');
-
+                showToast('Image loaded', 'success');
             }).catch(function(err) {
                 showToast(err.message, 'error');
                 decBtn.querySelector('.btn-label').textContent = 'Decode Message';
@@ -1697,9 +1508,9 @@
         }
 
         function clearDecImage() {
-            decImageLoaded = false;
-            decImageData = null;
+            decImageLoaded = false; decImageData = null;
             decDrop.classList.remove('has-image');
+            decJpegWarn.style.display = 'none';
             decFileInput.value = '';
             decResultArea.classList.remove('visible');
             decResultActions.style.display = 'none';
@@ -1707,15 +1518,9 @@
             decBtn.disabled = true;
         }
 
-        // ====================================================================
-        // DECODE PANEL: Decode Action
-        // ====================================================================
-
         function handleDecode() {
             if (!decImageLoaded || isProcessing) return;
-
-            isProcessing = true;
-            decBtn.disabled = true;
+            isProcessing = true; decBtn.disabled = true;
             decBtn.querySelector('.btn-label').innerHTML = '<span class="spinner"></span> Decoding...';
             decResultArea.classList.remove('visible');
             decResultActions.style.display = 'none';
@@ -1723,148 +1528,99 @@
             decProgressFill.style.width = '0%';
             decProgressPct.textContent = '0%';
 
-            decodeLSB(decImageData, function(progress) {
-                var pct = Math.round(progress * 100);
+            decodeLSB(decImageData, function(p) {
+                var pct = Math.round(p * 100);
                 decProgressFill.style.width = pct + '%';
                 decProgressPct.textContent = pct + '%';
             }).then(function(message) {
                 decProgressFill.style.width = '100%';
                 decProgressPct.textContent = '100%';
-
                 setTimeout(function() {
                     decProgress.classList.remove('active');
                     showDecodedMessage(message);
                     decBtn.querySelector('.btn-label').textContent = 'Decode Message';
-                    isProcessing = false;
-                    decBtn.disabled = false;
-                    showToast('Hidden message revealed (' + new TextEncoder().encode(message).length + ' bytes)', 'success');
+                    isProcessing = false; decBtn.disabled = false;
+                    showToast('Message revealed (' + new TextEncoder().encode(message).length + ' bytes)', 'success');
                 }, 400);
-
             }).catch(function(err) {
                 decProgress.classList.remove('active');
                 decBtn.querySelector('.btn-label').textContent = 'Decode Message';
-                isProcessing = false;
-                decBtn.disabled = false;
-
+                isProcessing = false; decBtn.disabled = false;
                 decResultArea.classList.add('visible');
                 decResultBox.textContent = err.message;
                 decResultBox.className = 'result-box error';
                 decResultActions.style.display = 'none';
-
                 showToast(err.message, 'error');
             });
         }
 
-        /**
-         * Display the decoded message with a typewriter reveal effect.
-         * Speed adapts to message length so long messages don't take forever.
-         */
         function showDecodedMessage(message) {
             decResultArea.classList.add('visible');
             decResultBox.className = 'result-box';
             decResultBox.textContent = '';
             decResultActions.style.display = 'none';
-
             decCopyBtn._message = message;
 
-            var charIndex = 0;
-            // Adaptive speed: longer messages type faster
+            var idx = 0;
             var speed = Math.max(2, Math.min(20, 2000 / message.length));
             if (message.length <= 50) speed = 30;
 
-            function typeChar() {
-                if (charIndex < message.length) {
-                    // Batch characters for very long messages
+            function type() {
+                if (idx < message.length) {
                     var batch = Math.max(1, Math.floor(message.length / 500));
-                    var end = Math.min(charIndex + batch, message.length);
-                    decResultBox.textContent += message.substring(charIndex, end);
-                    charIndex = end;
+                    var end = Math.min(idx + batch, message.length);
+                    decResultBox.textContent += message.substring(idx, end);
+                    idx = end;
                     decResultBox.scrollTop = decResultBox.scrollHeight;
-                    setTimeout(typeChar, speed);
+                    setTimeout(type, speed);
                 } else {
-                    // Done — show blinking cursor and copy button
                     decResultBox.classList.add('cursor-blink');
                     decResultActions.style.display = 'flex';
                 }
             }
-
-            typeChar();
+            type();
         }
 
-        // ====================================================================
-        // DECODE PANEL: Copy to Clipboard
-        // ====================================================================
-
         function handleCopy() {
-            var message = decCopyBtn._message;
-            if (!message) return;
-
+            var msg = decCopyBtn._message;
+            if (!msg) return;
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(message).then(function() {
-                    showToast('Message copied to clipboard', 'success');
+                navigator.clipboard.writeText(msg).then(function() {
+                    showToast('Copied to clipboard', 'success');
                     decCopyBtn.innerHTML =
                         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
                     setTimeout(function() {
                         decCopyBtn.innerHTML =
                             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard';
                     }, 2000);
-                }).catch(function() {
-                    fallbackCopy(message);
-                });
-            } else {
-                fallbackCopy(message);
-            }
+                }).catch(function() { fallbackCopy(msg); });
+            } else { fallbackCopy(msg); }
         }
 
         function fallbackCopy(text) {
             var ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.select();
-            try {
-                document.execCommand('copy');
-                showToast('Message copied to clipboard', 'success');
-            } catch (e) {
-                showToast('Failed to copy — please select and copy manually', 'error');
-            }
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); showToast('Copied to clipboard', 'success'); }
+            catch (e) { showToast('Copy failed.', 'error'); }
             document.body.removeChild(ta);
         }
 
         // ====================================================================
-        // EVENT LISTENERS
+        // WIRE UP EVENTS
         // ====================================================================
-
         setupDropZone(encDrop, encFileInput, handleEncFile);
         setupDropZone(decDrop, decFileInput, handleDecFile);
-
-        encRemoveBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            clearEncImage();
-        });
-
-        decRemoveBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            clearDecImage();
-        });
-
-        secretMsg.addEventListener('input', function() {
-            updateEncCapacity();
-            updateEncButton();
-        });
-
+        encRemoveBtn.addEventListener('click', function(e) { e.stopPropagation(); clearEncImage(); });
+        decRemoveBtn.addEventListener('click', function(e) { e.stopPropagation(); clearDecImage(); });
+        secretMsg.addEventListener('input', function() { updateEncCapacity(); updateEncButton(); });
         encBtn.addEventListener('click', handleEncode);
         encDownload.addEventListener('click', handleDownload);
         decBtn.addEventListener('click', handleDecode);
         decCopyBtn.addEventListener('click', handleCopy);
 
-        // ====================================================================
-        // INITIALIZATION
-        // ====================================================================
         updateEncCapacity();
         updateEncButton();
-
     })();
     </script>
 </body>
