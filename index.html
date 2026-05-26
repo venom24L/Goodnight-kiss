@@ -3,137 +3,1869 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elyana Magical Space</title>
+    <title>Steganography Lab — LSB Encoding</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #050505; overflow: hidden; font-family: 'Arial', sans-serif; }
-        canvas { display: block; }
-        .ui { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; text-align: center; }
-        button {
-            padding: 18px 45px; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.4);
-            font-size: 1rem; cursor: pointer; border-radius: 5px; transition: all 0.5s; letter-spacing: 4px; text-transform: uppercase;
-            backdrop-filter: blur(5px);
+        :root {
+            --bg-deep: #04040a;
+            --bg: #08080f;
+            --bg-card: #0d0d16;
+            --bg-raised: #111120;
+            --bg-input: #0a0a14;
+            --border: #181830;
+            --border-hover: #282850;
+            --border-active: rgba(0, 255, 136, 0.45);
+            --accent: #00ff88;
+            --accent-rgb: 0, 255, 136;
+            --accent-dim: rgba(0, 255, 136, 0.12);
+            --accent-mid: rgba(0, 255, 136, 0.3);
+            --text: #e4e4f0;
+            --text-sec: #9090aa;
+            --text-muted: #4a4a66;
+            --danger: #ff3060;
+            --danger-rgb: 255, 48, 96;
+            --warning: #ffaa22;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-ui: 'Space Grotesk', system-ui, sans-serif;
+            --radius: 10px;
+            --radius-lg: 14px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        button:hover { background: #fff; color: #000; box-shadow: 0 0 50px rgba(255,255,255,0.6); }
-        #bottom-text {
-            position: absolute; bottom: 8%; width: 100%; text-align: center; color: rgba(255,255,255,0.7);
-            font-size: 1.2rem; letter-spacing: 2px; opacity: 0; transition: opacity 4s;
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--bg-deep);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-mid); }
+
+        ::selection { background: rgba(var(--accent-rgb), 0.25); color: #fff; }
+
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-grid {
+            background-image:
+                linear-gradient(rgba(var(--accent-rgb), 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--accent-rgb), 0.025) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: gridDrift 60s linear infinite;
+        }
+
+        @keyframes gridDrift {
+            to { background-position: 48px 48px; }
+        }
+
+        .bg-scanlines {
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.04) 2px,
+                rgba(0, 0, 0, 0.04) 4px
+            );
+            z-index: 9999;
+        }
+
+        .bg-glow {
+            background: radial-gradient(
+                ellipse 70% 50% at 50% 0%,
+                rgba(var(--accent-rgb), 0.06) 0%,
+                transparent 70%
+            );
+        }
+
+        .app-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeSlideIn 0.8s ease-out both;
+        }
+
+        .app-header h1 {
+            font-family: var(--font-mono);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            text-shadow:
+                0 0 30px rgba(var(--accent-rgb), 0.3),
+                0 0 60px rgba(var(--accent-rgb), 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-header p {
+            font-size: 0.95rem;
+            color: var(--text-sec);
+            font-weight: 300;
+        }
+
+        .app-header .tag {
+            display: inline-block;
+            margin-top: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        .panels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .panels-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            animation: fadeSlideIn 0.8s ease-out both;
+            transition: border-color var(--transition);
+        }
+
+        .panel:hover { border-color: var(--border-hover); }
+
+        .panel:nth-child(1) { animation-delay: 0.1s; }
+        .panel:nth-child(2) { animation-delay: 0.25s; }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .panel-icon svg { width: 18px; height: 18px; }
+
+        .panel-header h2 {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .drop-zone {
+            position: relative;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition);
+            background: var(--bg-input);
+            overflow: hidden;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.drag-over {
+            border-color: var(--accent);
+            background: rgba(var(--accent-rgb), 0.04);
+            box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.08), inset 0 0 30px rgba(var(--accent-rgb), 0.02);
+        }
+
+        .drop-zone.drag-over { transform: scale(1.01); }
+
+        .drop-zone.has-image {
+            padding: 0.75rem;
+            border-style: solid;
+            border-color: var(--border-hover);
+        }
+
+        .drop-zone.has-image:hover { border-color: var(--accent); }
+
+        .drop-default {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .drop-default svg {
+            width: 36px;
+            height: 36px;
+            color: var(--text-muted);
+            transition: color var(--transition), transform var(--transition);
+        }
+
+        .drop-zone:hover .drop-default svg {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .drop-default .drop-title {
+            font-size: 0.85rem;
+            color: var(--text-sec);
+            font-weight: 500;
+        }
+
+        .drop-default .drop-hint {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .drop-preview {
+            display: none;
+            width: 100%;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .drop-zone.has-image .drop-default { display: none; }
+        .drop-zone.has-image .drop-preview { display: flex; }
+
+        .drop-preview img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .drop-preview-info {
+            flex: 1;
+            text-align: left;
+            min-width: 0;
+        }
+
+        .drop-preview-info .file-name {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .drop-preview-info .file-meta {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .drop-preview-info .file-capacity {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent);
+            margin-top: 0.15rem;
+            opacity: 0.8;
+        }
+
+        .btn-remove {
+            flex-shrink: 0;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .btn-remove:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: rgba(var(--danger-rgb), 0.1);
+        }
+
+        .form-group {
+            margin-top: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-sec);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 110px;
+            max-height: 300px;
+            resize: vertical;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.85rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text);
+            line-height: 1.6;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            outline: none;
+        }
+
+        textarea::placeholder { color: var(--text-muted); }
+
+        textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1), 0 0 20px rgba(var(--accent-rgb), 0.05);
+        }
+
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+        }
+
+        .byte-count { color: var(--text-muted); }
+        .byte-count.over { color: var(--danger); }
+
+        .capacity-label { color: var(--text-muted); }
+        .capacity-label.ok { color: var(--accent); }
+        .capacity-label.warn { color: var(--warning); }
+        .capacity-label.err { color: var(--danger); }
+
+        .capacity-bar {
+            margin-top: 0.4rem;
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .capacity-bar.visible { opacity: 1; }
+
+        .capacity-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+
+        .capacity-fill.warn { background: var(--warning); }
+        .capacity-fill.err { background: var(--danger); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            width: 100%;
+            margin-top: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #050508;
+        }
+
+        .btn-primary:not(:disabled):hover {
+            box-shadow: 0 0 25px rgba(var(--accent-rgb), 0.4), 0 4px 20px rgba(var(--accent-rgb), 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:not(:disabled):active { transform: translateY(0); }
+
+        .btn-download {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-download:not(:disabled):hover {
+            background: rgba(var(--accent-rgb), 0.1);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-copy {
+            background: var(--bg-raised);
+            color: var(--text-sec);
+            border: 1px solid var(--border);
+            margin-top: 0.75rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.72rem;
+        }
+
+        .btn-copy:not(:disabled):hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .progress-wrap {
+            margin-top: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-wrap.active { display: flex; }
+
+        .progress-track {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.15s ease;
+            box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.4);
+        }
+
+        .progress-pct {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent);
+            min-width: 36px;
+            text-align: right;
+        }
+
+        .result-area {
+            margin-top: 1.25rem;
+            display: none;
+        }
+
+        .result-area.visible { display: block; }
+
+        .result-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--accent);
+            line-height: 1.7;
+            min-height: 80px;
+            max-height: 300px;
+            overflow-y: auto;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .result-box.error {
+            color: var(--danger);
+            border-color: rgba(var(--danger-rgb), 0.3);
+        }
+
+        .cursor-blink::after {
+            content: '\2588';
+            animation: blink 1s step-end infinite;
+            color: var(--accent);
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .result-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .result-actions .btn-copy { flex: 1; margin-top: 0.75rem; }
+
+        #toast-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.7rem 1.1rem;
+            border-radius: 8px;
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            color: var(--text);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            transform: translateX(120%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: auto;
+            max-width: 340px;
+        }
+
+        .toast.show { transform: translateX(0); }
+
+        .toast-success { border-color: rgba(var(--accent-rgb), 0.4); }
+        .toast-success::before {
+            content: '\2713 ';
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .toast-error { border-color: rgba(var(--danger-rgb), 0.4); }
+        .toast-error::before {
+            content: '\2717 ';
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .toast-info::before {
+            content: '\203A ';
+            color: var(--text-sec);
+            font-weight: 700;
+        }
+
+        .app-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            animation: fadeSlideIn 0.8s ease-out 0.4s both;
+        }
+
+        .app-footer p {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-footer .tech-note {
+            margin-top: 0.5rem;
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible, textarea:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .warn-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            padding: 0.65rem 0.85rem;
+            background: rgba(255, 170, 34, 0.06);
+            border: 1px solid rgba(255, 170, 34, 0.2);
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--warning);
+            line-height: 1.5;
+        }
+
+        .warn-banner svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .format-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+
+        .format-badge.png {
+            background: rgba(var(--accent-rgb), 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(var(--accent-rgb), 0.2);
+        }
+
+        .format-badge.other {
+            background: rgba(255, 170, 34, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 34, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <div class="ui"><button id="btn">Initiate Universe</button></div>
-    <div id="bottom-text">Every star shines for you, Elyana</div>
-    <canvas id="canvas"></canvas>
+    <div class="bg-layer bg-grid" aria-hidden="true"></div>
+    <div class="bg-layer bg-glow" aria-hidden="true"></div>
+    <div class="bg-layer bg-scanlines" aria-hidden="true"></div>
+
+    <div id="toast-container" aria-live="polite"></div>
+
+    <div class="app-wrapper">
+
+        <header class="app-header">
+            <h1>STEGANOGRAPHY LAB</h1>
+            <p>Conceal and extract secret messages within images using LSB encoding</p>
+            <span class="tag">LEAST SIGNIFICANT BIT &middot; CLIENT-SIDE ONLY &middot; ZERO UPLOAD</span>
+        </header>
+
+        <main class="panels-grid">
+
+            <section class="panel" id="encode-panel" aria-label="Hide a message in an image">
+                <div class="panel-header">
+                    <div class="panel-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h2>HIDE MESSAGE</h2>
+                </div>
+
+                <div class="drop-zone" id="enc-drop" role="button" tabindex="0"
+                     aria-label="Drop a carrier image here or click to browse">
+                    <div class="drop-default">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <span class="drop-title">Drop carrier image here</span>
+                        <span class="drop-hint">or click to browse &middot; PNG recommended</span>
+                    </div>
+                    <div class="drop-preview" id="enc-preview">
+                        <img id="enc-preview-img" alt="Carrier image preview">
+                        <div class="drop-preview-info">
+                            <div class="file-name" id="enc-file-name"></div>
+                            <div class="file-meta" id="enc-file-meta"></div>
+                            <div class="file-capacity" id="enc-file-capacity"></div>
+                            <span class="format-badge" id="enc-format-badge"></span>
+                        </div>
+                        <button class="btn-remove" id="enc-remove" title="Remove image" aria-label="Remove image">&times;</button>
+                    </div>
+                </div>
+                <input type="file" id="enc-file-input" accept="image/*" hidden>
+
+                <div class="warn-banner" id="enc-jpeg-warn" style="display:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>JPEG is lossy — compression may corrupt hidden data. The output will be saved as PNG to preserve the message.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="secret-msg">SECRET MESSAGE</label>
+                    <textarea id="secret-msg" placeholder="Type the message you want to hide..." maxlength="500000"></textarea>
+                    <div class="input-footer">
+                        <span class="byte-count" id="enc-byte-count">0 bytes</span>
+                        <span class="capacity-label" id="enc-cap-label">No image loaded</span>
+                    </div>
+                    <div class="capacity-bar" id="enc-cap-bar">
+                        <div class="capacity-fill" id="enc-cap-fill"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="enc-btn" disabled>
+                    <span class="btn-label">Encode Message</span>
+                </button>
+
+                <div class="progress-wrap" id="enc-progress">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="enc-progress-fill"></div>
+                    </div>
+                    <span class="progress-pct" id="enc-progress-pct">0%</span>
+                </div>
+
+                <button class="btn btn-download" id="enc-download" style="display:none">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Encoded Image
+                </button>
+            </section>
+
+            <section class="panel" id="decode-panel" aria-label="Reveal a hidden message from an image">
+                <div class="panel-header">
+                    <div class="panel-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                        </svg>
+                    </div>
+                    <h2>REVEAL MESSAGE</h2>
+                </div>
+
+                <div class="drop-zone" id="dec-drop" role="button" tabindex="0"
+                     aria-label="Drop an encoded image here or click to browse">
+                    <div class="drop-default">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <span class="drop-title">Drop encoded image here</span>
+                        <span class="drop-hint">or click to browse &middot; Must be a previously encoded PNG</span>
+                    </div>
+                    <div class="drop-preview" id="dec-preview">
+                        <img id="dec-preview-img" alt="Encoded image preview">
+                        <div class="drop-preview-info">
+                            <div class="file-name" id="dec-file-name"></div>
+                            <div class="file-meta" id="dec-file-meta"></div>
+                        </div>
+                        <button class="btn-remove" id="dec-remove" title="Remove image" aria-label="Remove image">&times;</button>
+                    </div>
+                </div>
+                <input type="file" id="dec-file-input" accept="image/*" hidden>
+
+                <button class="btn btn-primary" id="dec-btn" disabled>
+                    <span class="btn-label">Decode Message</span>
+                </button>
+
+                <div class="progress-wrap" id="dec-progress">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="dec-progress-fill"></div>
+                    </div>
+                    <span class="progress-pct" id="dec-progress-pct">0%</span>
+                </div>
+
+                <div class="result-area" id="dec-result-area">
+                    <div class="result-label">HIDDEN MESSAGE</div>
+                    <div class="result-box" id="dec-result-box"></div>
+                    <div class="result-actions" id="dec-result-actions" style="display:none">
+                        <button class="btn btn-copy" id="dec-copy-btn">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            Copy to Clipboard
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <p>
+                Each pixel's R, G, B channels store one bit in their Least Significant Bit.
+                A 32-bit header encodes the message byte-length, followed by UTF-8 encoded payload.
+                Changes are imperceptible — each channel value shifts by at most &plusmn;1.
+            </p>
+            <p class="tech-note">All processing runs locally in your browser. No data leaves your device.</p>
+        </footer>
+    </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const btn = document.getElementById('btn');
-        const bottomText = document.getElementById('bottom-text');
+    /* ==========================================================================
+       STEGANOGRAPHY LAB — Complete LSB Encode / Decode Implementation
+       ==========================================================================
+       Algorithm Overview:
+       1. Convert the secret message to UTF-8 bytes via TextEncoder
+       2. Prepend a 32-bit (big-endian) header storing the byte count
+       3. For each bit in the combined binary payload, modify the LSB of
+          the Red, Green, then Blue channel of successive pixels
+       4. The Alpha channel (index 3 of each pixel) is never touched
+       5. Decoding reads the 32-bit header first, then extracts exactly
+          that many bytes of payload
+       ========================================================================== */
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    (function() {
+        'use strict';
 
-        let particles = [];
-        let transform = false;
-        const mouse = { x: null, y: null, radius: 100 };
+        // ====================================================================
+        // DOM REFERENCES
+        // ====================================================================
+        var $ = function(sel) { return document.querySelector(sel); };
 
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        // Encode panel elements
+        var encDrop        = $('#enc-drop');
+        var encFileInput   = $('#enc-file-input');
+        var encPreviewImg  = $('#enc-preview-img');
+        var encFileName    = $('#enc-file-name');
+        var encFileMeta    = $('#enc-file-meta');
+        var encFileCap     = $('#enc-file-capacity');
+        var encFormatBadge = $('#enc-format-badge');
+        var encRemoveBtn   = $('#enc-remove');
+        var encJpegWarn    = $('#enc-jpeg-warn');
+        var secretMsg      = $('#secret-msg');
+        var encByteCount   = $('#enc-byte-count');
+        var encCapLabel    = $('#enc-cap-label');
+        var encCapBar      = $('#enc-cap-bar');
+        var encCapFill     = $('#enc-cap-fill');
+        var encBtn         = $('#enc-btn');
+        var encProgress    = $('#enc-progress');
+        var encProgressFill= $('#enc-progress-fill');
+        var encProgressPct = $('#enc-progress-pct');
+        var encDownload    = $('#enc-download');
 
-        class Particle {
-            constructor(x, y, targetX, targetY, color) {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.targetX = targetX;
-                this.targetY = targetY;
-                this.size = Math.random() * 2 + 0.5;
-                this.color = color;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.density = (Math.random() * 30) + 1;
-                this.angle = Math.random() * 360;
+        // Decode panel elements
+        var decDrop        = $('#dec-drop');
+        var decFileInput   = $('#dec-file-input');
+        var decPreviewImg  = $('#dec-preview-img');
+        var decFileName    = $('#dec-file-name');
+        var decFileMeta    = $('#dec-file-meta');
+        var decRemoveBtn   = $('#dec-remove');
+        var decBtn         = $('#dec-btn');
+        var decProgress    = $('#dec-progress');
+        var decProgressFill= $('#dec-progress-fill');
+        var decProgressPct = $('#dec-progress-pct');
+        var decResultArea  = $('#dec-result-area');
+        var decResultBox   = $('#dec-result-box');
+        var decResultActions = $('#dec-result-actions');
+        var decCopyBtn     = $('#dec-copy-btn');
+
+        // ====================================================================
+        // APPLICATION STATE
+        // ====================================================================
+        var encImageLoaded = false;
+        var encImageWidth  = 0;
+        var encImageHeight = 0;
+        var encMaxBytes    = 0;
+        var encOrigName    = '';
+        var encImageData   = null;
+
+        var decImageLoaded = false;
+        var decImageData   = null;
+
+        var isProcessing   = false;
+
+        // ====================================================================
+        // UTILITY: Toast Notifications
+        // ====================================================================
+        function showToast(message, type) {
+            type = type || 'info';
+            var container = $('#toast-container');
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    toast.classList.add('show');
+                });
+            });
+
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() { toast.remove(); }, 400);
+            }, 3500);
+        }
+
+        // ====================================================================
+        // UTILITY: Text to Binary Conversion (UTF-8)
+        // ====================================================================
+
+        /**
+         * Convert a 32-bit unsigned integer to a 32-character binary string.
+         * Uses big-endian order (most significant bit first).
+         * Example: 257 -> "00000000000000000000000100000001"
+         *
+         * The loop iterates from bit 31 down to 0:
+         *   (value >>> i) & 1 extracts the i-th bit from the left.
+         *   >>> is unsigned right-shift, ensuring bit 31 stays 0 for positive values.
+         */
+        function uint32ToBinary(value) {
+            var bits = '';
+            for (var i = 31; i >= 0; i--) {
+                bits += ((value >>> i) & 1).toString();
             }
+            return bits;
+        }
 
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+        /**
+         * Convert a 32-character binary string back to a 32-bit unsigned integer.
+         *
+         * We accumulate left-to-right:
+         *   value = (value << 1) | nextBit
+         * Each iteration shifts all previously read bits left by one position
+         * and inserts the new bit at the LSB position.
+         * >>> 0 at the end coerces the result to an unsigned 32-bit integer.
+         */
+        function binaryToUint32(binaryStr) {
+            var value = 0;
+            for (var i = 0; i < 32; i++) {
+                value = (value << 1) | parseInt(binaryStr[i]);
             }
+            return value >>> 0;
+        }
 
-            update() {
-                if (transform) {
-                    // حركة التجمع مع تأثير النبض
-                    let pulse = Math.sin(Date.now() * 0.002) * 2;
-                    let dx = (this.targetX + pulse) - this.x;
-                    let dy = (this.targetY + pulse) - this.y;
-                    this.x += dx * 0.06;
-                    this.y += dy * 0.06;
+        /**
+         * Convert a binary string (must be multiple of 8) back to UTF-8 text.
+         * Groups bits into 8-bit chunks, parses each as a byte, then decodes.
+         */
+        function binaryToText(binaryStr) {
+            var bytes = [];
+            for (var i = 0; i < binaryStr.length; i += 8) {
+                bytes.push(parseInt(binaryStr.substr(i, 8), 2));
+            }
+            var decoder = new TextDecoder();
+            return decoder.decode(new Uint8Array(bytes));
+        }
 
-                    // تفاعل مع الماوس بعد التجمع
-                    let mdx = mouse.x - this.x;
-                    let mdy = mouse.y - this.y;
-                    let distance = Math.sqrt(mdx*mdx + mdy*mdy);
-                    if (distance < mouse.radius) {
-                        this.x -= mdx / 10;
-                        this.y -= mdy / 10;
+        // ====================================================================
+        // UTILITY: Image Loading (File -> Canvas -> ImageData)
+        // ====================================================================
+
+        /**
+         * Load an image file into an off-screen canvas and return its ImageData.
+         * The canvas must match the image's natural dimensions exactly — any
+         * scaling would interpolate pixel values and destroy existing LSB data
+         * (critical when decoding an already-encoded image).
+         */
+        function loadImageFromFile(file) {
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+
+                reader.onerror = function() {
+                    reject(new Error('Failed to read file'));
+                };
+
+                reader.onload = function() {
+                    var img = new Image();
+
+                    img.onerror = function() {
+                        reject(new Error('Failed to decode image. File may be corrupted.'));
+                    };
+
+                    img.onload = function() {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        var ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+
+                        // getImageData returns a flat Uint8ClampedArray in RGBA order:
+                        // [R0, G0, B0, A0, R1, G1, B1, A1, R2, G2, B2, A2, ...]
+                        // Each pixel occupies 4 consecutive indices.
+                        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                        resolve({
+                            imageData: imageData,
+                            width: canvas.width,
+                            height: canvas.height
+                        });
+                    };
+
+                    img.src = reader.result;
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ====================================================================
+        // UTILITY: Calculate Maximum Message Capacity
+        // ====================================================================
+
+        /**
+         * Calculate the maximum message BYTES an image can hold.
+         *
+         * Each pixel provides 3 usable bits (R, G, B — we skip Alpha).
+         * Total bits = width * height * 3
+         * Subtract 32 bits for the length header.
+         * Remaining bits / 8 = available message bytes.
+         */
+        function calcMaxBytes(width, height) {
+            var totalPixels = width * height;
+            var totalBits = totalPixels * 3;
+            var availableBits = totalBits - 32;
+            return Math.floor(availableBits / 8);
+        }
+
+        // ====================================================================
+        // CORE: LSB ENCODING (Chunked, Non-Blocking)
+        // ====================================================================
+
+        /**
+         * Encode a secret message into image pixel data using LSB substitution.
+         *
+         * THE BITWISE OPERATION — Setting the LSB:
+         * ───────────────────────────────────────────
+         * Each color channel is an 8-bit integer (0-255).
+         *
+         *   pixel[i] & 0xFE     -> Clears the LSB to 0
+         *                          0xFE = 11111110 in binary
+         *                          Example: 173 (10101101) & 254 (11111110) = 172 (10101100)
+         *
+         *   result | bitValue   -> Sets the LSB to 0 or 1
+         *                          Example: 172 (10101100) | 1 (00000001) = 173 (10101101)
+         *                          Example: 172 (10101100) | 0 (00000000) = 172 (10101100)
+         *
+         * The maximum change per channel is +/-1 — invisible to the human eye.
+         *
+         * DATA LAYOUT:
+         *   Bits 0-31:   Message byte-length as uint32 big-endian
+         *   Bits 32+:    UTF-8 encoded message bytes, 8 bits each
+         *   Stored as:   Pixel0[R,G,B], Pixel1[R,G,B], Pixel2[R,G,B], ...
+         *   Alpha (index 3 of each pixel) is NEVER modified.
+         *
+         * @param {ImageData} imageData - The pixel data to modify
+         * @param {string} message      - The secret message to hide
+         * @param {function} onProgress - Callback with progress 0.0-1.0
+         * @returns {Promise<ImageData>} - The modified pixel data
+         */
+        function encodeLSB(imageData, message, onProgress) {
+            return new Promise(function(resolve, reject) {
+
+                // Step 1: Build the complete binary payload
+                var encoder = new TextEncoder();
+                var msgBytes = encoder.encode(message);
+                var byteLength = msgBytes.length;
+
+                // 32-bit header stores the message byte count
+                var headerBits = uint32ToBinary(byteLength);
+
+                // Convert each message byte to 8-bit binary
+                var messageBits = '';
+                for (var m = 0; m < msgBytes.length; m++) {
+                    messageBits += msgBytes[m].toString(2).padStart(8, '0');
+                }
+
+                // Full payload: header + message
+                var payload = headerBits + messageBits;
+
+                // Step 2: Capacity check
+                var pixels = imageData.data;
+                var totalPixelCount = pixels.length / 4;
+                var maxBits = totalPixelCount * 3;
+
+                if (payload.length > maxBits) {
+                    reject(new Error(
+                        'Message too large for this image. Need ' + payload.length +
+                        ' bits but only ' + maxBits + ' bits available.'
+                    ));
+                    return;
+                }
+
+                // Step 3: Chunked encoding to keep UI responsive
+                var CHUNK_SIZE = 80000;
+                var bitIndex = 0;
+                var pixelIndex = 0;
+                var totalPixelsNeeded = Math.ceil(payload.length / 3);
+
+                function processChunk() {
+                    var endPixel = Math.min(pixelIndex + CHUNK_SIZE, totalPixelsNeeded);
+
+                    for (var p = pixelIndex; p < endPixel; p++) {
+                        var base = p * 4;
+
+                        // RED channel (offset 0): clear LSB with & 0xFE, set with | bit
+                        if (bitIndex < payload.length) {
+                            pixels[base]     = (pixels[base]     & 0xFE) | parseInt(payload[bitIndex]);
+                            bitIndex++;
+                        }
+
+                        // GREEN channel (offset 1)
+                        if (bitIndex < payload.length) {
+                            pixels[base + 1] = (pixels[base + 1] & 0xFE) | parseInt(payload[bitIndex]);
+                            bitIndex++;
+                        }
+
+                        // BLUE channel (offset 2) — skip offset 3 (Alpha)
+                        if (bitIndex < payload.length) {
+                            pixels[base + 2] = (pixels[base + 2] & 0xFE) | parseInt(payload[bitIndex]);
+                            bitIndex++;
+                        }
                     }
+
+                    pixelIndex = endPixel;
+
+                    if (onProgress) {
+                        onProgress(Math.min(pixelIndex / totalPixelsNeeded, 1));
+                    }
+
+                    if (pixelIndex < totalPixelsNeeded) {
+                        // Yield to the browser event loop, then continue
+                        setTimeout(processChunk, 0);
+                    } else {
+                        resolve(imageData);
+                    }
+                }
+
+                setTimeout(processChunk, 10);
+            });
+        }
+
+        // ====================================================================
+        // CORE: LSB DECODING (Chunked, Non-Blocking)
+        // ====================================================================
+
+        /**
+         * Decode a hidden message from image pixel data.
+         *
+         * THE BITWISE OPERATION — Reading the LSB:
+         * ───────────────────────────────────────────
+         *   pixel[i] & 1   -> Extracts only the LSB
+         *                      0x01 = 00000001 in binary
+         *                      Example: 173 (10101101) & 1 (00000001) = 1
+         *                      Example: 172 (10101100) & 1 (00000001) = 0
+         *
+         * DECODING PROTOCOL:
+         *   1. Read first 32 bits (~11 pixels) as uint32 -> message byte length
+         *   2. Validate length is within image capacity and sanity bounds
+         *   3. Read exactly byteLength * 8 more bits
+         *   4. Group into 8-bit chunks, convert to bytes, decode as UTF-8
+         *
+         * @param {ImageData} imageData - The pixel data to read from
+         * @param {function} onProgress - Callback with progress 0.0-1.0
+         * @returns {Promise<string>} - The decoded secret message
+         */
+        function decodeLSB(imageData, onProgress) {
+            return new Promise(function(resolve, reject) {
+
+                var pixels = imageData.data;
+                var totalPixelCount = pixels.length / 4;
+                var maxCapacity = Math.floor((totalPixelCount * 3 - 32) / 8);
+
+                // Step 1: Extract 32-bit header (synchronous — only ~11 pixels)
+                var headerBits = '';
+                var pi = 0;
+
+                while (headerBits.length < 32 && pi < totalPixelCount) {
+                    var base = pi * 4;
+                    // & 1 isolates the least significant bit
+                    headerBits += (pixels[base]     & 1).toString();
+                    if (headerBits.length < 32)
+                        headerBits += (pixels[base + 1] & 1).toString();
+                    if (headerBits.length < 32)
+                        headerBits += (pixels[base + 2] & 1).toString();
+                    pi++;
+                }
+
+                if (headerBits.length < 32) {
+                    reject(new Error('Image too small to contain any hidden data.'));
+                    return;
+                }
+
+                var messageByteLength = binaryToUint32(headerBits);
+
+                // Step 2: Validate the header
+                if (messageByteLength === 0) {
+                    reject(new Error('No hidden message found (empty payload).'));
+                    return;
+                }
+                if (messageByteLength > maxCapacity) {
+                    reject(new Error(
+                        'No valid hidden message found. The decoded length (' +
+                        messageByteLength.toLocaleString() + ' bytes) exceeds image capacity (' +
+                        maxCapacity.toLocaleString() + ' bytes). This image was likely not encoded.'
+                    ));
+                    return;
+                }
+                if (messageByteLength > 5000000) {
+                    reject(new Error(
+                        'Decoded header suggests an implausibly large message (' +
+                        messageByteLength.toLocaleString() + ' bytes). This image was likely not encoded.'
+                    ));
+                    return;
+                }
+
+                // Step 3: Extract message bits (chunked for large payloads)
+                var totalBitsToRead = 32 + messageByteLength * 8;
+                var allBits = headerBits;
+                var CHUNK_SIZE = 80000;
+
+                function processChunk() {
+                    var endPixel = Math.min(pi + CHUNK_SIZE, totalPixelCount);
+
+                    for (var p = pi; p < endPixel; p++) {
+                        if (allBits.length >= totalBitsToRead) break;
+
+                        var b = p * 4;
+                        allBits += (pixels[b]     & 1).toString();
+                        if (allBits.length < totalBitsToRead)
+                            allBits += (pixels[b + 1] & 1).toString();
+                        if (allBits.length < totalBitsToRead)
+                            allBits += (pixels[b + 2] & 1).toString();
+                    }
+
+                    pi = endPixel;
+
+                    if (onProgress) {
+                        onProgress(Math.min(allBits.length / totalBitsToRead, 1));
+                    }
+
+                    if (allBits.length < totalBitsToRead && pi < totalPixelCount) {
+                        setTimeout(processChunk, 0);
+                    } else {
+                        // Step 4: Convert bits back to text
+                        var messageBits = allBits.substr(32, messageByteLength * 8);
+
+                        if (messageBits.length < messageByteLength * 8) {
+                            reject(new Error('Image ended before all message bits could be read.'));
+                            return;
+                        }
+
+                        try {
+                            var message = binaryToText(messageBits);
+                            resolve(message);
+                        } catch (e) {
+                            reject(new Error('Failed to decode message bytes as valid UTF-8 text.'));
+                        }
+                    }
+                }
+
+                setTimeout(processChunk, 10);
+            });
+        }
+
+        // ====================================================================
+        // ROBUST DOWNLOAD: Blob + ObjectURL approach
+        // ====================================================================
+
+        /**
+         * Trigger a file download from a URL string.
+         *
+         * Creates a hidden anchor element, appends it to the DOM body,
+         * and programmatically clicks it. The element MUST remain in the
+         * DOM tree briefly — Firefox silently ignores click() on detached
+         * elements, and some mobile browsers cancel downloads if the
+         * anchor is removed synchronously before the download initiates.
+         */
+        function triggerDownload(url, filename) {
+            var link = document.createElement('a');
+            link.download = filename;
+            link.href = url;
+            link.style.display = 'none';
+
+            document.body.appendChild(link);
+
+            // 50ms delay ensures the browser registers the element in the
+            // document tree before we trigger the click event
+            setTimeout(function() {
+                link.click();
+
+                // Remove after another 200ms — removing too quickly can
+                // cancel the download in certain browser implementations
+                setTimeout(function() {
+                    if (link.parentNode) {
+                        link.parentNode.removeChild(link);
+                    }
+                }, 200);
+            }, 50);
+        }
+
+        /**
+         * Download the encoded canvas as a PNG file.
+         *
+         * Uses canvas.toBlob() instead of toDataURL() because:
+         *   - toDataURL builds a massive base64 string in memory; it can
+         *     silently fail for large canvases (>10-20 megapixels)
+         *   - toBlob streams the result into a Blob object, which is far
+         *     more memory-efficient and reliable across browsers
+         *
+         * Falls back to toDataURL if toBlob is unavailable or returns null.
+         */
+        function handleDownload() {
+            if (!encDownload._canvas) return;
+
+            var canvas = encDownload._canvas;
+            var filename = encDownload._filename || 'stego_image.png';
+
+            // toBlob is asynchronous — the callback receives a Blob or null
+            canvas.toBlob(function(blob) {
+                if (!blob) {
+                    // Fallback for browsers where toBlob fails
+                    try {
+                        var dataURL = canvas.toDataURL('image/png');
+                        triggerDownload(dataURL, filename);
+                        showToast('Image downloaded as PNG', 'success');
+                    } catch (e) {
+                        showToast('Download failed — try right-clicking to save.', 'error');
+                        console.error('Download error:', e);
+                    }
+                    return;
+                }
+
+                // Create a temporary internal blob:// URL from the Blob.
+                // More memory-efficient than a base64 data URL for large images.
+                var blobURL = URL.createObjectURL(blob);
+
+                triggerDownload(blobURL, filename);
+
+                // Revoke the object URL after 5 seconds to free memory.
+                // Cannot revoke immediately — the browser needs time to
+                // initiate the download from the URL.
+                setTimeout(function() {
+                    URL.revokeObjectURL(blobURL);
+                }, 5000);
+
+                showToast('Image downloaded as PNG', 'success');
+            }, 'image/png');
+        }
+
+        // ====================================================================
+        // DRAG & DROP HANDLING
+        // ====================================================================
+
+        /**
+         * Set up drag-and-drop events on a drop zone element.
+         * Handles dragenter, dragover, dragleave, and drop events.
+         * Also handles click-to-browse and keyboard accessibility.
+         */
+        function setupDropZone(dropEl, fileInput, onFile) {
+            dropEl.addEventListener('click', function(e) {
+                if (e.target.closest('.btn-remove')) return;
+                fileInput.click();
+            });
+
+            dropEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    onFile(fileInput.files[0]);
+                }
+            });
+
+            dropEl.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropEl.classList.add('drag-over');
+            });
+
+            dropEl.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            dropEl.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Only remove visual state when truly leaving the drop zone
+                // (not when moving between child elements)
+                if (!dropEl.contains(e.relatedTarget)) {
+                    dropEl.classList.remove('drag-over');
+                }
+            });
+
+            dropEl.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropEl.classList.remove('drag-over');
+
+                var files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    onFile(files[0]);
+                }
+            });
+        }
+
+        // ====================================================================
+        // ENCODE PANEL: Image Loading
+        // ====================================================================
+
+        function handleEncFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file.', 'error');
+                return;
+            }
+
+            encBtn.disabled = true;
+            encBtn.querySelector('.btn-label').textContent = 'Loading image...';
+
+            loadImageFromFile(file).then(function(result) {
+                encImageLoaded = true;
+                encImageWidth = result.width;
+                encImageHeight = result.height;
+                encImageData = result.imageData;
+                encOrigName = file.name.replace(/\.[^.]+$/, '');
+
+                // Update preview
+                encPreviewImg.src = URL.createObjectURL(file);
+                encFileName.textContent = file.name;
+                encFileMeta.textContent = result.width + ' \u00d7 ' + result.height + ' px';
+
+                encMaxBytes = calcMaxBytes(result.width, result.height);
+                encFileCap.textContent = 'Capacity: ' + encMaxBytes.toLocaleString() + ' bytes';
+
+                // Format badge
+                var ext = file.name.split('.').pop().toUpperCase();
+                encFormatBadge.textContent = ext;
+                encFormatBadge.className = 'format-badge ' + (ext === 'PNG' ? 'png' : 'other');
+
+                // JPEG warning
+                encJpegWarn.style.display = (ext === 'JPG' || ext === 'JPEG') ? 'flex' : 'none';
+
+                encDrop.classList.add('has-image');
+                encDownload.style.display = 'none';
+
+                updateEncCapacity();
+                updateEncButton();
+
+                encBtn.querySelector('.btn-label').textContent = 'Encode Message';
+                showToast('Carrier image loaded', 'success');
+
+            }).catch(function(err) {
+                showToast(err.message, 'error');
+                encBtn.querySelector('.btn-label').textContent = 'Encode Message';
+            });
+        }
+
+        function clearEncImage() {
+            encImageLoaded = false;
+            encImageData = null;
+            encMaxBytes = 0;
+            encOrigName = '';
+            encDrop.classList.remove('has-image');
+            encJpegWarn.style.display = 'none';
+            encFileInput.value = '';
+            encDownload.style.display = 'none';
+            encProgress.classList.remove('active');
+            updateEncCapacity();
+            updateEncButton();
+        }
+
+        // ====================================================================
+        // ENCODE PANEL: Capacity & Button State
+        // ====================================================================
+
+        function getSecretMessageBytes() {
+            var encoder = new TextEncoder();
+            return encoder.encode(secretMsg.value).length;
+        }
+
+        function updateEncCapacity() {
+            var msgBytes = getSecretMessageBytes();
+
+            encByteCount.textContent = msgBytes.toLocaleString() + ' bytes';
+            encByteCount.classList.toggle('over', msgBytes > encMaxBytes && encImageLoaded);
+
+            if (!encImageLoaded) {
+                encCapLabel.textContent = 'No image loaded';
+                encCapLabel.className = 'capacity-label';
+                encCapBar.classList.remove('visible');
+                return;
+            }
+
+            encCapBar.classList.add('visible');
+            var pct = Math.min((msgBytes / encMaxBytes) * 100, 100);
+            encCapFill.style.width = pct + '%';
+
+            if (msgBytes === 0) {
+                encCapLabel.textContent = encMaxBytes.toLocaleString() + ' bytes available';
+                encCapLabel.className = 'capacity-label';
+                encCapFill.className = 'capacity-fill';
+            } else if (msgBytes <= encMaxBytes) {
+                encCapLabel.textContent = msgBytes.toLocaleString() + ' / ' + encMaxBytes.toLocaleString() + ' bytes';
+                encCapLabel.className = 'capacity-label' + (pct > 80 ? ' warn' : ' ok');
+                encCapFill.className = 'capacity-fill' + (pct > 80 ? ' warn' : '');
+            } else {
+                encCapLabel.textContent = 'Exceeds capacity by ' + (msgBytes - encMaxBytes).toLocaleString() + ' bytes';
+                encCapLabel.className = 'capacity-label err';
+                encCapFill.className = 'capacity-fill err';
+                encCapFill.style.width = '100%';
+            }
+        }
+
+        function updateEncButton() {
+            var msgBytes = getSecretMessageBytes();
+            encBtn.disabled = !encImageLoaded || msgBytes === 0 || msgBytes > encMaxBytes || isProcessing;
+        }
+
+        // ====================================================================
+        // ENCODE PANEL: Encode Action
+        // ====================================================================
+
+        function handleEncode() {
+            if (!encImageLoaded || isProcessing) return;
+
+            var msgBytes = getSecretMessageBytes();
+            if (msgBytes === 0) {
+                showToast('Please enter a message to hide.', 'error');
+                return;
+            }
+            if (msgBytes > encMaxBytes) {
+                showToast('Message exceeds image capacity. Use a larger image or shorter message.', 'error');
+                return;
+            }
+
+            isProcessing = true;
+            encBtn.disabled = true;
+            encBtn.querySelector('.btn-label').innerHTML = '<span class="spinner"></span> Encoding...';
+            encDownload.style.display = 'none';
+            encProgress.classList.add('active');
+            encProgressFill.style.width = '0%';
+            encProgressPct.textContent = '0%';
+
+            // Work on a COPY of the ImageData so the original preview is unaffected
+            var copyData = new ImageData(
+                new Uint8ClampedArray(encImageData.data),
+                encImageData.width,
+                encImageData.height
+            );
+
+            encodeLSB(copyData, secretMsg.value, function(progress) {
+                var pct = Math.round(progress * 100);
+                encProgressFill.style.width = pct + '%';
+                encProgressPct.textContent = pct + '%';
+            }).then(function(encodedData) {
+                // Draw encoded image to a canvas for download
+                var canvas = document.createElement('canvas');
+                canvas.width = encodedData.width;
+                canvas.height = encodedData.height;
+                var ctx = canvas.getContext('2d');
+                ctx.putImageData(encodedData, 0, 0);
+
+                // Store canvas reference and filename for the download handler
+                encDownload._canvas = canvas;
+                encDownload._filename = encOrigName + '_stego.png';
+
+                encProgressFill.style.width = '100%';
+                encProgressPct.textContent = '100%';
+
+                setTimeout(function() {
+                    encProgress.classList.remove('active');
+                    encDownload.style.display = 'flex';
+                    encBtn.querySelector('.btn-label').textContent = 'Encode Message';
+                    isProcessing = false;
+                    updateEncButton();
+                    showToast(
+                        'Message encoded successfully (' + msgBytes + ' bytes hidden)',
+                        'success'
+                    );
+                }, 400);
+
+            }).catch(function(err) {
+                encProgress.classList.remove('active');
+                encBtn.querySelector('.btn-label').textContent = 'Encode Message';
+                isProcessing = false;
+                updateEncButton();
+                showToast(err.message, 'error');
+            });
+        }
+
+        // ====================================================================
+        // DECODE PANEL: Image Loading
+        // ====================================================================
+
+        function handleDecFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file.', 'error');
+                return;
+            }
+
+            decBtn.disabled = true;
+            decBtn.querySelector('.btn-label').textContent = 'Loading image...';
+
+            decResultArea.classList.remove('visible');
+            decResultActions.style.display = 'none';
+
+            loadImageFromFile(file).then(function(result) {
+                decImageLoaded = true;
+                decImageData = result.imageData;
+
+                decPreviewImg.src = URL.createObjectURL(file);
+                decFileName.textContent = file.name;
+                decFileMeta.textContent = result.width + ' \u00d7 ' + result.height + ' px';
+
+                decDrop.classList.add('has-image');
+                decBtn.disabled = false;
+                decBtn.querySelector('.btn-label').textContent = 'Decode Message';
+
+                showToast('Encoded image loaded', 'success');
+
+            }).catch(function(err) {
+                showToast(err.message, 'error');
+                decBtn.querySelector('.btn-label').textContent = 'Decode Message';
+            });
+        }
+
+        function clearDecImage() {
+            decImageLoaded = false;
+            decImageData = null;
+            decDrop.classList.remove('has-image');
+            decFileInput.value = '';
+            decResultArea.classList.remove('visible');
+            decResultActions.style.display = 'none';
+            decProgress.classList.remove('active');
+            decBtn.disabled = true;
+        }
+
+        // ====================================================================
+        // DECODE PANEL: Decode Action
+        // ====================================================================
+
+        function handleDecode() {
+            if (!decImageLoaded || isProcessing) return;
+
+            isProcessing = true;
+            decBtn.disabled = true;
+            decBtn.querySelector('.btn-label').innerHTML = '<span class="spinner"></span> Decoding...';
+            decResultArea.classList.remove('visible');
+            decResultActions.style.display = 'none';
+            decProgress.classList.add('active');
+            decProgressFill.style.width = '0%';
+            decProgressPct.textContent = '0%';
+
+            decodeLSB(decImageData, function(progress) {
+                var pct = Math.round(progress * 100);
+                decProgressFill.style.width = pct + '%';
+                decProgressPct.textContent = pct + '%';
+            }).then(function(message) {
+                decProgressFill.style.width = '100%';
+                decProgressPct.textContent = '100%';
+
+                setTimeout(function() {
+                    decProgress.classList.remove('active');
+                    showDecodedMessage(message);
+                    decBtn.querySelector('.btn-label').textContent = 'Decode Message';
+                    isProcessing = false;
+                    decBtn.disabled = false;
+                    showToast('Hidden message revealed (' + new TextEncoder().encode(message).length + ' bytes)', 'success');
+                }, 400);
+
+            }).catch(function(err) {
+                decProgress.classList.remove('active');
+                decBtn.querySelector('.btn-label').textContent = 'Decode Message';
+                isProcessing = false;
+                decBtn.disabled = false;
+
+                decResultArea.classList.add('visible');
+                decResultBox.textContent = err.message;
+                decResultBox.className = 'result-box error';
+                decResultActions.style.display = 'none';
+
+                showToast(err.message, 'error');
+            });
+        }
+
+        /**
+         * Display the decoded message with a typewriter reveal effect.
+         * Speed adapts to message length so long messages don't take forever.
+         */
+        function showDecodedMessage(message) {
+            decResultArea.classList.add('visible');
+            decResultBox.className = 'result-box';
+            decResultBox.textContent = '';
+            decResultActions.style.display = 'none';
+
+            decCopyBtn._message = message;
+
+            var charIndex = 0;
+            // Adaptive speed: longer messages type faster
+            var speed = Math.max(2, Math.min(20, 2000 / message.length));
+            if (message.length <= 50) speed = 30;
+
+            function typeChar() {
+                if (charIndex < message.length) {
+                    // Batch characters for very long messages
+                    var batch = Math.max(1, Math.floor(message.length / 500));
+                    var end = Math.min(charIndex + batch, message.length);
+                    decResultBox.textContent += message.substring(charIndex, end);
+                    charIndex = end;
+                    decResultBox.scrollTop = decResultBox.scrollHeight;
+                    setTimeout(typeChar, speed);
                 } else {
-                    // حركة عشوائية هادئة
-                    this.x += Math.cos(this.angle) * 0.2;
-                    this.y += Math.sin(this.angle) * 0.2;
+                    // Done — show blinking cursor and copy button
+                    decResultBox.classList.add('cursor-blink');
+                    decResultActions.style.display = 'flex';
                 }
+            }
+
+            typeChar();
+        }
+
+        // ====================================================================
+        // DECODE PANEL: Copy to Clipboard
+        // ====================================================================
+
+        function handleCopy() {
+            var message = decCopyBtn._message;
+            if (!message) return;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(message).then(function() {
+                    showToast('Message copied to clipboard', 'success');
+                    decCopyBtn.innerHTML =
+                        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+                    setTimeout(function() {
+                        decCopyBtn.innerHTML =
+                            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard';
+                    }, 2000);
+                }).catch(function() {
+                    fallbackCopy(message);
+                });
+            } else {
+                fallbackCopy(message);
             }
         }
 
-        function getPoints() {
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
-            const fSize = Math.min(canvas.width / 5, 180);
-            tempCtx.font = `bold ${fSize}px Arial`;
-            tempCtx.textAlign = 'center';
-            tempCtx.textBaseline = 'middle';
-            tempCtx.fillText("Elyana", canvas.width / 2, canvas.height / 2);
-
-            const data = tempCtx.getImageData(0, 0, canvas.width, canvas.height).data;
-            const pts = [];
-            for (let y = 0; y < canvas.height; y += 4) {
-                for (let x = 0; x < canvas.width; x += 4) {
-                    if (data[(y * canvas.width + x) * 4 + 3] > 128) {
-                        // ألوان متدرجة بناءً على المكان
-                        let color = `hsl(${180 + (x/canvas.width)*100}, 80%, 70%)`;
-                        pts.push({ x, y, color });
-                    }
-                }
+        function fallbackCopy(text) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('Message copied to clipboard', 'success');
+            } catch (e) {
+                showToast('Failed to copy — please select and copy manually', 'error');
             }
-            return pts;
+            document.body.removeChild(ta);
         }
 
-        function init() {
-            const pts = getPoints();
-            particles = pts.map(p => new Particle(p.x, p.y, p.x, p.y, p.color));
-        }
+        // ====================================================================
+        // EVENT LISTENERS
+        // ====================================================================
 
-        function animate() {
-            ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
+        setupDropZone(encDrop, encFileInput, handleEncFile);
+        setupDropZone(decDrop, decFileInput, handleDecFile);
 
-        btn.addEventListener('click', () => {
-            transform = true;
-            btn.style.opacity = '0';
-            setTimeout(() => btn.style.display = 'none', 500);
-            bottomText.style.opacity = '1';
+        encRemoveBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            clearEncImage();
         });
 
-        init();
-        animate();
-        window.addEventListener('resize', () => { location.reload(); });
+        decRemoveBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            clearDecImage();
+        });
+
+        secretMsg.addEventListener('input', function() {
+            updateEncCapacity();
+            updateEncButton();
+        });
+
+        encBtn.addEventListener('click', handleEncode);
+        encDownload.addEventListener('click', handleDownload);
+        decBtn.addEventListener('click', handleDecode);
+        decCopyBtn.addEventListener('click', handleCopy);
+
+        // ====================================================================
+        // INITIALIZATION
+        // ====================================================================
+        updateEncCapacity();
+        updateEncButton();
+
+    })();
     </script>
 </body>
 </html>
