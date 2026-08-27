@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will you give me a goodnight kiss?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Will you give me a goodnight kiss Dory?</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Canvas Confetti CDN -->
@@ -14,8 +14,10 @@
         body {
             font-family: 'Fredoka', 'Nunito', sans-serif;
             background-color: #fde8ed;
-            overflow-x: hidden;
-            touch-action: manipulation;
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         /* Floating Hearts Animation */
@@ -35,7 +37,6 @@
             bottom: -50px;
             color: rgba(244, 114, 182, 0.45);
             animation: floatUp linear infinite;
-            user-select: none;
         }
 
         @keyframes floatUp {
@@ -67,7 +68,17 @@
 
         /* Smooth Growth Transitions */
         .btn-smooth {
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), padding 0.2s ease, font-size 0.2s ease;
+        }
+
+        /* Lightweight Fast Fleeing Button */
+        .fleeing-btn {
+            position: fixed !important;
+            z-index: 50 !important;
+            top: 0 !important;
+            left: 0 !important;
+            transition: transform 0.08s cubic-bezier(0.1, 0.9, 0.2, 1) !important;
+            will-change: transform;
         }
 
         .wiggle {
@@ -98,7 +109,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center relative p-4 select-none">
+<body class="min-h-screen flex items-center justify-center relative p-4">
 
     <!-- PRELOADER OVERLAY -->
     <div id="preloader" class="fixed inset-0 z-50 bg-[#fde8ed] flex flex-col items-center justify-center transition-opacity duration-700">
@@ -107,7 +118,7 @@
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
         </div>
-        <p class="text-rose-900 font-bold text-lg tracking-wide">Preparing love...</p>
+        <p class="text-rose-900 font-bold text-lg tracking-wide">Preparing love for Dory...</p>
     </div>
 
     <!-- BACKGROUND FLOATING HEARTS -->
@@ -124,13 +135,13 @@
                 <img id="startImage" src="https://i.postimg.cc/brcWbfkq/12917973275cecaf2c2e6db29675f0b2.jpg" alt="Choice visual" class="w-full h-full object-cover">
             </div>
 
-            <!-- QUESTION HEADER -->
+            <!-- QUESTION HEADER WITH DORY'S NAME -->
             <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-rose-950 tracking-tight leading-snug px-2">
-                Will you give me a goodnight kiss?
+                Will you give me a goodnight kiss, Dory?
             </h1>
 
             <!-- BUTTONS CONTAINER -->
-            <div id="buttonArea" class="relative w-full min-h-[160px] flex items-center justify-center gap-4 mt-2 px-2 flex-wrap">
+            <div id="buttonArea" class="relative w-full min-h-[160px] flex items-center justify-center gap-4 mt-2 px-2">
                 
                 <!-- GREEN YES BUTTON -->
                 <button id="yesBtn" onclick="handleYesClick()" class="btn-smooth bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-extrabold rounded-full px-8 py-3.5 text-xl shadow-lg yes-glow focus:outline-none z-20 flex items-center justify-center cursor-pointer whitespace-nowrap">
@@ -138,7 +149,7 @@
                 </button>
 
                 <!-- CRIMSON RED NO BUTTON -->
-                <button id="noBtn" onclick="handleNoInteraction()" class="btn-smooth bg-rose-700 hover:bg-rose-800 active:bg-rose-900 text-white font-bold rounded-full px-6 py-2.5 text-base shadow-md focus:outline-none z-10 flex items-center justify-center cursor-pointer whitespace-nowrap">
+                <button id="noBtn" onclick="handleNoClick()" class="btn-smooth bg-rose-700 text-white font-bold rounded-full px-6 py-2.5 text-base shadow-md focus:outline-none flex items-center justify-center whitespace-nowrap cursor-pointer">
                     No
                 </button>
 
@@ -151,7 +162,7 @@
             
             <!-- JOYFUL HEADER -->
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-rose-900 tracking-tight leading-tight wiggle">
-                Knew you would say yes!
+                Thank you Mommy Dory goodnight
             </h1>
 
             <!-- SUCCESS IMAGE -->
@@ -160,7 +171,7 @@
             </div>
 
             <p class="text-rose-800/80 font-bold text-lg sm:text-xl pt-1">
-                Sending you the sweetest warmth and goodnight kisses
+                Sending you the sweetest warmth and goodnight kisses, Dory
             </p>
 
             <button onclick="resetPage()" class="mt-2 px-6 py-2.5 bg-white/80 hover:bg-white text-rose-700 font-bold rounded-full shadow-sm border border-rose-200 transition-all text-sm cursor-pointer hover:shadow-md">
@@ -172,26 +183,25 @@
     </main>
 
     <script>
-        // Expanded sequence of pleading messages for gradual progression
         const noMessages = [
-            "Are you sure?",
+            "Are you sure, Dory?",
             "Really sure??",
-            "Think about it again...",
-            "Are you positive?",
-            "Pookie please...",
-            "Don't be so cold...",
-            "If you say no, I will be really sad",
-            "I will be very very sad...",
-            "My heart is breaking...",
-            "You're really doing this?",
-            "Please reconsider...",
-            "Okay last chance, say yes..."
+            "Pls Dory 😠",
+            "Or else no ice-cream",
+            "Pls Pookie dookie",
+            "Don't be mean or else 🤬",
+            "You can't choose yes",
+            "U serious?",
+            "Just give up",
+            "زعلن",
+            "خلاص"
         ];
 
         let clickCount = 0;
         let isSuccess = false;
+        let isFleeingState = false;
+        let crazyMoveTimeout = null;
 
-        // Image Preloader logic to prevent page display before resources load
         const imageUrls = [
             "https://i.postimg.cc/brcWbfkq/12917973275cecaf2c2e6db29675f0b2.jpg",
             "https://i.postimg.cc/bYxFMM1r/c26646ca9bd0a682a8561a81a49290bf.jpg"
@@ -203,42 +213,16 @@
                     const img = new Image();
                     img.src = url;
                     img.onload = resolve;
-                    img.onerror = resolve; // Continue even if load fails to prevent hanging
+                    img.onerror = resolve;
                 });
             });
             return Promise.all(promises);
         }
 
-        // Initialize audio context for subtle clicks
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
-
-        function initAudio() {
-            if (!audioCtx) audioCtx = new AudioCtx();
-        }
-
-        function playPopSound() {
-            try {
-                initAudio();
-                if (!audioCtx) return;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(280 + (clickCount * 25), audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(500 + (clickCount * 30), audioCtx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.08);
-            } catch (e) {}
-        }
-
         function playVictorySound() {
             try {
-                initAudio();
-                if (!audioCtx) return;
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioCtx();
                 const now = audioCtx.currentTime;
                 const notes = [523.25, 659.25, 783.99, 1046.50];
                 notes.forEach((freq, idx) => {
@@ -258,12 +242,12 @@
 
         function createBackgroundHearts() {
             const container = document.getElementById('heartsContainer');
-            const heartCount = 18;
+            const heartCount = 14;
             for (let i = 0; i < heartCount; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'floating-heart';
                 heart.innerHTML = `
-                    <svg class="fill-current" style="width: ${Math.random() * 20 + 16}px; height: ${Math.random() * 20 + 16}px;" viewBox="0 0 24 24">
+                    <svg class="fill-current" style="width: ${Math.random() * 18 + 14}px; height: ${Math.random() * 18 + 14}px;" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                     </svg>
                 `;
@@ -274,61 +258,94 @@
             }
         }
 
-        // Handle interaction with NO button
-        function handleNoInteraction() {
+        function jumpButtonOnce() {
             if (isSuccess) return;
-
-            playPopSound();
 
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
 
-            // Change message step by step
+            if (!isFleeingState) {
+                noBtn.classList.add('fleeing-btn');
+                isFleeingState = true;
+            }
+
+            const btnWidth = noBtn.offsetWidth || 110;
+            const btnHeight = noBtn.offsetHeight || 45;
+            const padding = 20;
+
+            const maxX = window.innerWidth - btnWidth - padding;
+            const maxY = window.innerHeight - btnHeight - padding;
+
+            const newX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const newY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            noBtn.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+
             const messageIndex = Math.min(clickCount, noMessages.length - 1);
             noBtn.innerText = noMessages[messageIndex];
 
-            clickCount++;
-
-            // Gradual growth parameters for YES button
-            const growthRate = 0.18; // Slowed down growth rate
-            const maxClicks = 12;
-            const progress = Math.min(clickCount / maxClicks, 1);
-
-            // Padding and size scale up slowly across 12 steps
-            const paddingX = 32 + (clickCount * 14);
-            const paddingY = 14 + (clickCount * 8);
-            const fontSize = 1.25 + (clickCount * 0.18);
-            const scaleVal = 1 + (clickCount * growthRate);
+            const paddingX = 32 + (clickCount * 12);
+            const paddingY = 14 + (clickCount * 7);
+            const fontSize = 1.25 + (clickCount * 0.15);
+            const scaleVal = 1 + (clickCount * 0.15);
 
             yesBtn.style.paddingLeft = `${paddingX}px`;
             yesBtn.style.paddingRight = `${paddingX}px`;
             yesBtn.style.paddingTop = `${paddingY}px`;
             yesBtn.style.paddingBottom = `${paddingY}px`;
             yesBtn.style.fontSize = `${fontSize}rem`;
-            yesBtn.style.transform = `scale(${scaleVal})`;
-
-            // Gradually fade and shrink NO button in later stages
-            if (clickCount > 5) {
-                const fadeProgress = (clickCount - 5) / (maxClicks - 5);
-                noBtn.style.opacity = `${Math.max(1 - (fadeProgress * 0.6), 0.4)}`;
-                noBtn.style.transform = `scale(${Math.max(1 - (fadeProgress * 0.3), 0.7)})`;
-            }
-
-            // Trigger slight wiggle animation
-            noBtn.classList.remove('wiggle');
-            void noBtn.offsetWidth;
-            noBtn.classList.add('wiggle');
+            yesBtn.style.transform = `scale(${Math.min(scaleVal, 3)})`;
         }
 
-        // Handle YES button click
+        function runCrazyCycle() {
+            if (isSuccess) return;
+
+            let stepsLeft = 24;
+
+            function step() {
+                if (isSuccess) return;
+
+                if (stepsLeft > 0) {
+                    jumpButtonOnce();
+                    stepsLeft--;
+                    crazyMoveTimeout = setTimeout(step, 80);
+                } else {
+                    crazyMoveTimeout = setTimeout(() => {
+                        if (!isSuccess) runCrazyCycle();
+                    }, 500);
+                }
+            }
+
+            step();
+        }
+
+        function handleNoClick() {
+            if (isSuccess) return;
+
+            clickCount++;
+
+            if (clickCount === 1) {
+                jumpButtonOnce();
+            } else if (clickCount >= 2) {
+                if (crazyMoveTimeout) clearTimeout(crazyMoveTimeout);
+                jumpButtonOnce();
+                runCrazyCycle();
+            }
+        }
+
         function handleYesClick() {
             if (isSuccess) return;
             isSuccess = true;
+
+            if (crazyMoveTimeout) clearTimeout(crazyMoveTimeout);
 
             playVictorySound();
 
             const initialPage = document.getElementById('initialPage');
             const successPage = document.getElementById('successPage');
+            const noBtn = document.getElementById('noBtn');
+
+            noBtn.style.display = 'none';
 
             initialPage.classList.add('fade-exit');
 
@@ -341,10 +358,9 @@
             }, 450);
         }
 
-        // Celebration confetti burst
         function triggerConfetti() {
             if (typeof confetti === 'function') {
-                const count = 180;
+                const count = 150;
                 const defaults = {
                     origin: { y: 0.65 },
                     colors: ['#f43f5e', '#ec4899', '#f472b6', '#fbcfe8', '#fbbf24', '#ffffff']
@@ -364,8 +380,11 @@
         }
 
         function resetPage() {
+            if (crazyMoveTimeout) clearTimeout(crazyMoveTimeout);
+
             clickCount = 0;
             isSuccess = false;
+            isFleeingState = false;
 
             const initialPage = document.getElementById('initialPage');
             const successPage = document.getElementById('successPage');
@@ -379,8 +398,9 @@
             yesBtn.style.paddingBottom = '';
             yesBtn.style.fontSize = '';
 
-            noBtn.style.transform = 'scale(1)';
-            noBtn.style.opacity = '1';
+            noBtn.classList.remove('fleeing-btn');
+            noBtn.style.transform = 'none';
+            noBtn.style.display = 'flex';
             noBtn.innerText = 'No';
 
             successPage.classList.add('hidden');
@@ -388,7 +408,6 @@
             initialPage.classList.remove('hidden', 'fade-exit');
         }
 
-        // Wait for page load and image preloading before removing loader
         window.addEventListener('load', () => {
             createBackgroundHearts();
             preloadImages().then(() => {
